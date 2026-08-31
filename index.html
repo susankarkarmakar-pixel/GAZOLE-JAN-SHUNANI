@@ -4,20 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GAZOLE JAN SHUNANI - গাজোল জনশুনানি</title>
-  <meta name="description" content="Public Grievance Hearing & Redressal System - Gazole Block Development Office">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ===== APP CONTAINER ===== -->
   <div id="app">
-
-    <!-- ===== HEADER ===== -->
-    <header class="app-header" id="appHeader">
+    <!-- HEADER -->
+    <header class="app-header">
       <div class="header-content">
         <div class="header-logo">
           <i class="fas fa-landmark"></i>
@@ -26,15 +23,13 @@
             <h2>গাজোল জনশুনানি</h2>
           </div>
         </div>
-        <button class="header-action" id="headerActionBtn" onclick="navigateTo('login')">
+        <button class="header-action" onclick="navigateTo('login')">
           <i class="fas fa-user-shield"></i>
         </button>
       </div>
     </header>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
-
       <!-- HOME PAGE -->
       <section class="page active" id="page-home">
         <div class="hero-banner">
@@ -55,25 +50,24 @@
           </div>
         </div>
 
-        <div class="info-card hearing-card">
-          <div class="info-card-header">
-            <i class="fas fa-calendar-alt"></i>
+        <div class="card hearing-card">
+          <div class="card-header">
+            <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
             <div>
               <h3>Hearing Schedule</h3>
               <span class="bn-label">জনশুনানির সময়</span>
             </div>
           </div>
-          <div class="info-card-body">
-            <p class="highlight-text">মঙ্গলবার ও বৃহস্পতিবার</p>
-            <p class="highlight-text">সকাল ১:৩০টা - দুপুর :০০টা</p>
-            <p class="small-text">Tuesday & Thursday, 10:30 AM - 1:00 PM</p>
+          <div class="card-body">
+            <p class="highlight-text">মঙ্গলবার ও বৃহস্পতিবার, সকাল 10:30টা - দুপুর 1:00টা</p>
+            <p class="sub-text">Tuesday & Thursday, 10:30 AM - 1:00 PM</p>
           </div>
         </div>
 
         <div class="info-grid">
-          <div class="info-card clickable" onclick="showInfoModal('how')">
-            <div class="info-card-header">
-              <i class="fas fa-question-circle"></i>
+          <div class="card clickable" onclick="showInfoModal('how')">
+            <div class="card-header">
+              <div class="icon-box"><i class="fas fa-question-circle"></i></div>
               <div>
                 <h3>How it works</h3>
                 <span class="bn-label">কীভাবে কাজ করে</span>
@@ -81,9 +75,9 @@
             </div>
             <i class="fas fa-chevron-right info-arrow"></i>
           </div>
-          <div class="info-card clickable" onclick="showInfoModal('contact')">
-            <div class="info-card-header">
-              <i class="fas fa-phone"></i>
+          <div class="card clickable" onclick="showInfoModal('contact')">
+            <div class="card-header">
+              <div class="icon-box"><i class="fas fa-phone"></i></div>
               <div>
                 <h3>Contact Us</h3>
                 <span class="bn-label">যোগাযোগ করুন</span>
@@ -92,34 +86,15 @@
             <i class="fas fa-chevron-right info-arrow"></i>
           </div>
         </div>
-
-        <div class="stats-preview">
-          <h3 class="section-title">Quick Overview</h3>
-          <div class="stats-mini-grid">
-            <div class="stat-mini">
-              <div class="stat-mini-value">1,248</div>
-              <div class="stat-mini-label">Total<br>মোট</div>
-            </div>
-            <div class="stat-mini pending">
-              <div class="stat-mini-value">342</div>
-              <div class="stat-mini-label">Pending<br>বিচারাধীন</div>
-            </div>
-            <div class="stat-mini resolved">
-              <div class="stat-mini-value">456</div>
-              <div class="stat-mini-label">Resolved<br>সমাধানকৃত</div>
-            </div>
-          </div>
-        </div>
       </section>
 
-      <!-- SUBMIT GRIEVANCE PAGE -->
+      <!-- SUBMIT PAGE -->
       <section class="page" id="page-submit">
         <div class="page-header">
           <h2>Submit New Complaint</h2>
           <span class="bn-label">নতুন অভিযোগ দাখিল করুন</span>
         </div>
 
-        <!-- Progress Stepper -->
         <div class="progress-stepper">
           <div class="step active" data-step="1">
             <div class="step-circle">1</div>
@@ -138,10 +113,10 @@
         </div>
 
         <form id="grievanceForm">
-          <!-- Step 1: Personal Info -->
+          <!-- Step 1 -->
           <div class="form-step active" id="step-1">
             <div class="section-header">
-              <i class="fas fa-user"></i>
+              <div class="icon-box primary"><i class="fas fa-user"></i></div>
               <div>
                 <h3>Complainant Information</h3>
                 <span class="bn-label">ব্যক্তিগত তথ্য</span>
@@ -149,21 +124,18 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <span class="bn-label">সম্পূর্ণ নাম</span>
+              <label class="form-label"><span class="label-en">Full Name</span><span class="label-bn">সম্পূর্ণ নাম</span></label>
               <input type="text" class="form-control" id="fullName" required placeholder="Enter full name">
             </div>
 
             <div class="form-group">
-              <label class="form-label">Mobile Number</label>
-              <span class="bn-label">মোবাইল নম্বর</span>
+              <label class="form-label"><span class="label-en">Mobile Number</span><span class="label-bn">মোবাইল নম্বর</span></label>
               <input type="tel" class="form-control" id="mobile" pattern="[0-9]{10}" required placeholder="10-digit mobile number">
             </div>
 
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Relation</label>
-                <span class="bn-label">সম্পর্ক</span>
+                <label class="form-label"><span class="label-en">Relation</span><span class="label-bn">সম্পর্ক</span></label>
                 <select class="form-control" id="relation" required>
                   <option value="">Select</option>
                   <option value="S/O">S/O</option>
@@ -173,15 +145,13 @@
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Guardian's Name</label>
-                <span class="bn-label">অভিভাবকের নাম</span>
+                <label class="form-label"><span class="label-en">Guardian's Name</span><span class="label-bn">অভিভাবকের নাম</span></label>
                 <input type="text" class="form-control" id="guardianName" required placeholder="Enter guardian name">
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Gram Panchayat</label>
-              <span class="bn-label">গ্রাম পঞ্চায়েত</span>
+              <label class="form-label"><span class="label-en">Gram Panchayat</span><span class="label-bn">গ্রাম পঞ্চায়েত</span></label>
               <select class="form-control" id="gramPanchayat" required>
                 <option value="">Select GP</option>
                 <option value="Gazole I">Gazole I</option>
@@ -203,20 +173,17 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Village/Locality</label>
-              <span class="bn-label">গ্রাম/এলাকা</span>
+              <label class="form-label"><span class="label-en">Village/Locality</span><span class="label-bn">গ্রাম/এলাকা</span></label>
               <input type="text" class="form-control" id="village" required placeholder="Enter village or locality name">
             </div>
 
-            <button type="button" class="btn btn-primary btn-block" onclick="nextStep(2)">
-              Next: Details <i class="fas fa-arrow-right"></i>
-            </button>
+            <button type="button" class="btn btn-primary btn-block" onclick="nextStep(2)">Next: Details <i class="fas fa-arrow-right"></i></button>
           </div>
 
-          <!-- Step 2: Complaint Details -->
+          <!-- Step 2 -->
           <div class="form-step" id="step-2">
             <div class="section-header">
-              <i class="fas fa-clipboard-list"></i>
+              <div class="icon-box primary"><i class="fas fa-clipboard-list"></i></div>
               <div>
                 <h3>Complaint Details</h3>
                 <span class="bn-label">অভিযোগের বিবরণ</span>
@@ -224,8 +191,7 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Complaint Category</label>
-              <span class="bn-label">অভিযোগের বিভাগ</span>
+              <label class="form-label"><span class="label-en">Complaint Category</span><span class="label-bn">অভিযোগের বিভাগ</span></label>
               <div class="input-with-action">
                 <select class="form-control" id="category" required>
                   <option value="">Select Category</option>
@@ -233,37 +199,27 @@
                   <option value="Roads">Roads</option>
                   <option value="Electricity">Electricity</option>
                   <option value="Panchayat Services">Panchayat Services</option>
-                  <option value="Sanitation">Sanitation</option>
-                  <option value="Health">Health</option>
-                  <option value="Education">Education</option>
                   <option value="Other">Other</option>
                 </select>
-                <button type="button" class="btn-icon" onclick="openAddCategoryModal()">
-                  <i class="fas fa-plus"></i>
-                </button>
+                <button type="button" class="btn-icon" onclick="openAddCategoryModal()"><i class="fas fa-plus"></i></button>
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Detailed Description</label>
-              <span class="bn-label">বিস্তারিত বিবরণ</span>
+              <label class="form-label"><span class="label-en">Detailed Description</span><span class="label-bn">বিস্তারিত বিবরণ</span></label>
               <textarea class="form-control" id="description" rows="5" required placeholder="Describe the issue clearly..."></textarea>
             </div>
 
             <div class="step-actions">
-              <button type="button" class="btn btn-outline" onclick="prevStep(1)">
-                <i class="fas fa-arrow-left"></i> Back
-              </button>
-              <button type="button" class="btn btn-primary" onclick="nextStep(3)">
-                Next: Evidence <i class="fas fa-arrow-right"></i>
-              </button>
+              <button type="button" class="btn btn-outline" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+              <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next: Evidence <i class="fas fa-arrow-right"></i></button>
             </div>
           </div>
 
-          <!-- Step 3: Evidence Upload -->
+          <!-- Step 3 -->
           <div class="form-step" id="step-3">
             <div class="section-header">
-              <i class="fas fa-upload"></i>
+              <div class="icon-box primary"><i class="fas fa-upload"></i></div>
               <div>
                 <h3>Evidence Upload</h3>
                 <span class="bn-label">প্রমাণ আপলোড</span>
@@ -274,462 +230,57 @@
               <i class="fas fa-cloud-upload-alt upload-icon"></i>
               <p class="upload-text">Drag and drop files here</p>
               <p class="upload-hint">Supported formats: JPG, PNG, PDF (Max 5MB)</p>
-              <button type="button" class="btn btn-outline">
-                <i class="fas fa-folder-open"></i> Browse Files
-              </button>
+              <button type="button" class="btn btn-outline"><i class="fas fa-folder-open"></i> Browse Files</button>
             </div>
             <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf" style="display:none" onchange="handleFileSelect(event)">
-
             <div class="file-list" id="fileList"></div>
 
             <div class="step-actions">
-              <button type="button" class="btn btn-outline" onclick="prevStep(2)">
-                <i class="fas fa-arrow-left"></i> Back
-              </button>
-              <button type="submit" class="btn btn-accent">
-                <i class="fas fa-paper-plane"></i> Submit Grievance
-                <span class="btn-bn">অভিযোগ জমা দিন</span>
-              </button>
+              <button type="button" class="btn btn-outline" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+              <button type="submit" class="btn btn-accent"><i class="fas fa-paper-plane"></i> Submit Grievance <span class="btn-bn">অভিযোগ জমা দিন</span></button>
             </div>
           </div>
         </form>
       </section>
 
-      <!-- GRIEVANCES LIST PAGE -->
-      <section class="page" id="page-grievances">
-        <div class="page-header">
-          <h2>Grievances List</h2>
-          <span class="bn-label">অভিযোগের তালিকা</span>
-        </div>
-
-        <div class="search-bar">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" class="form-control search-input" id="searchInput" placeholder="Search by ID or Name / অনুসন্ধান করুন" oninput="filterGrievances()">
-        </div>
-
-        <div class="filters-row">
-          <select class="form-control filter-select" id="filterStatus" onchange="filterGrievances()">
-            <option value="">Status / অবস্থা</option>
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Resolved">Resolved</option>
-            <option value="Escalated">Escalated</option>
-          </select>
-          <select class="form-control filter-select" id="filterCategory" onchange="filterGrievances()">
-            <option value="">Category / বিভাগ</option>
-            <option value="Water">Water</option>
-            <option value="Roads">Roads</option>
-            <option value="Electricity">Electricity</option>
-            <option value="Health">Health</option>
-          </select>
-          <select class="form-control filter-select" id="filterGP" onchange="filterGrievances()">
-            <option value="">GP / গ্রাম পঞ্চায়েত</option>
-            <option value="Gazole I">Gazole I</option>
-            <option value="Gazole II">Gazole II</option>
-            <option value="Alal">Alal</option>
-          </select>
-        </div>
-
-        <div class="grievances-list" id="grievancesList">
-          <!-- Sample grievances will be populated by JS -->
-        </div>
-      </section>
-
-      <!-- GRIEVANCE DETAILS PAGE -->
-      <section class="page" id="page-details">
-        <div class="details-header">
-          <button class="back-btn" onclick="navigateTo('grievances')">
-            <i class="fas fa-arrow-left"></i>
-          </button>
-          <div>
-            <h2>Grievance Details</h2>
-            <span class="bn-label">অভিযোগের বিবরণ</span>
-          </div>
-        </div>
-
-        <div class="details-id-card" id="detailsIdCard">
-          <div class="details-id-label">ID / অভিযোগ আইডি</div>
-          <div class="details-id-value" id="detailsId">GJS-2023-8942</div>
-          <span class="status-badge status-pending" id="detailsStatus">Pending</span>
-        </div>
-
-        <div class="action-banner" id="actionBanner">
-          <i class="fas fa-exclamation-triangle"></i>
-          <div>
-            <strong>Action Required</strong>
-            <span class="bn-label">পদক্ষেপ প্রয়োজন</span>
-          </div>
-        </div>
-
-        <div class="details-section">
-          <div class="section-header">
-            <i class="fas fa-user"></i>
-            <div>
-              <h3>Applicant Details</h3>
-              <span class="bn-label">আবেদনকারীর বিবরণ</span>
-            </div>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Name / নাম</span>
-            <span class="detail-value" id="detailName">Rahul Mondal</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Phone / ফোন</span>
-            <span class="detail-value" id="detailPhone">+91 98765 43210</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Address / ঠিকানা</span>
-            <span class="detail-value" id="detailAddress">Ward 5, Gazole Market Area</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Gram Panchayat / গ্রাম পঞ্চায়েত</span>
-            <span class="detail-value" id="detailGP">Gazole I</span>
-          </div>
-        </div>
-
-        <div class="details-section">
-          <div class="section-header">
-            <i class="fas fa-clipboard-list"></i>
-            <div>
-              <h3>Grievance Details</h3>
-              <span class="bn-label">অভিযোগের বিবরণ</span>
-            </div>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Category / বিভাগ</span>
-            <span class="detail-value" id="detailCategory">
-              <i class="fas fa-tint"></i> Water Supply
-            </span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Date Submitted / জমাদানের তারিখ</span>
-            <span class="detail-value" id="detailDate">12 Oct 2023, 10:30 AM</span>
-          </div>
-          <div class="detail-row full">
-            <span class="detail-label">Full Description / সম্পূর্ণ বিবরণ</span>
-            <p class="detail-description" id="detailDescription">
-              The main water pipe near the ward 5 intersection has burst, causing severe waterlogging on the road and disrupting the drinking water supply for the past 48 hours. Immediate repair is requested as it is causing public distress and wastage of clean water.
-            </p>
-          </div>
-        </div>
-
-        <div class="details-section">
-          <div class="section-header">
-            <i class="fas fa-paperclip"></i>
-            <div>
-              <h3>Evidence & Attachments</h3>
-              <span class="bn-label">প্রমাণ এবং সংযুক্তি</span>
-            </div>
-          </div>
-          <div class="evidence-grid" id="evidenceGrid">
-            <div class="evidence-item">
-              <img src="https://via.placeholder.com/150" alt="Evidence 1">
-              <button class="evidence-zoom"><i class="fas fa-search-plus"></i></button>
-            </div>
-            <div class="evidence-item">
-              <img src="https://via.placeholder.com/150" alt="Evidence 2">
-              <button class="evidence-zoom"><i class="fas fa-search-plus"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn btn-primary btn-block" id="updateStatusBtn" onclick="openUpdateStatusModal()" style="display:none">
-          <i class="fas fa-edit"></i> Update Status / স্ট্যাটাস আপডেট করুন
-        </button>
-      </section>
-
-      <!-- TRACK STATUS PAGE -->
-      <section class="page" id="page-track">
-        <div class="page-header">
-          <h2>Track Grievance Status</h2>
-          <span class="bn-label">অভিযোগের অবস্থা ট্র্যাক করুন</span>
-        </div>
-
-        <div class="track-search-card">
-          <div class="form-group">
-            <label class="form-label">Complaint ID / অভিযোগ আইডি</label>
-            <div class="input-with-action">
-              <input type="text" class="form-control" id="trackId" placeholder="e.g., GZL/JS/2026/GAZOLE-I/0001">
-              <button class="btn btn-primary" onclick="trackGrievance()">
-                <i class="fas fa-search"></i> Track / ট্র্যাক
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div id="trackResult"></div>
-      </section>
-
-      <!-- LOGIN PAGE -->
-      <section class="page" id="page-login">
-        <div class="login-container">
-          <div class="login-header">
-            <i class="fas fa-landmark login-logo"></i>
-            <h2>GAZOLE JAN SHUNANI</h2>
-            <p class="bn-label">Official Portal / অফিসিয়াল পোর্টাল</p>
-          </div>
-
-          <div class="login-tabs">
-            <button class="login-tab active" data-tab="officer" onclick="switchLoginTab('officer')">
-              Officer Login / অফিসার লগইন
-            </button>
-            <button class="login-tab" data-tab="admin" onclick="switchLoginTab('admin')">
-              Admin (BDO) / অ্যাডমিন
-            </button>
-          </div>
-
-          <div id="loginAlert"></div>
-
-          <form id="officerLoginForm" onsubmit="return handleOfficerLogin(event)">
-            <div class="form-group">
-              <label class="form-label">Mobile Number</label>
-              <span class="bn-label">মোবাইল নম্বর</span>
-              <div class="input-with-icon">
-                <i class="fas fa-mobile-alt"></i>
-                <input type="tel" class="form-control" id="loginMobile" pattern="[0-9]{10}" required placeholder="Enter 10-digit number">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">4-Digit PIN</label>
-              <span class="bn-label">৪-সংখ্যার পিন</span>
-              <div class="input-with-icon">
-                <i class="fas fa-lock"></i>
-                <input type="password" class="form-control" id="loginPin" maxlength="4" required placeholder="••••">
-              </div>
-            </div>
-
-            <a href="#" class="forgot-link">Forgot PIN? (পিন ভুলে গেছেন?)</a>
-
-            <button type="submit" class="btn btn-primary btn-block btn-lg">
-              <i class="fas fa-sign-in-alt"></i> Login / লগইন
-            </button>
-          </form>
-
-          <form id="adminLoginForm" style="display:none" onsubmit="return handleAdminLogin(event)">
-            <div class="form-group">
-              <label class="form-label">Admin Password</label>
-              <span class="bn-label">অ্যাডমিন পাসওয়ার্ড</span>
-              <div class="input-with-icon">
-                <i class="fas fa-key"></i>
-                <input type="password" class="form-control" id="adminPassword" required placeholder="Enter admin password">
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block btn-lg">
-              <i class="fas fa-sign-in-alt"></i> Admin Login
-            </button>
-          </form>
-
-          <button class="back-home-btn" onclick="navigateTo('home')">
-            <i class="fas fa-arrow-left"></i> Back to Home / হোমে ফিরে যান
-          </button>
-        </div>
-      </section>
-
-      <!-- DASHBOARD PAGE -->
-      <section class="page" id="page-dashboard">
-        <div class="dashboard-welcome">
-          <h2>Welcome, <span id="dashUserName">BDO Gazole</span></h2>
-          <p class="bn-label">স্বাগতম, বিডিও গাজোল</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
-            <div class="stat-value" id="statTotal">1,248</div>
-            <div class="stat-label">Total Complaints<br>মোট অভিযোগ</div>
-          </div>
-          <div class="stat-card pending">
-            <div class="stat-icon"><i class="fas fa-clock"></i></div>
-            <div class="stat-value" id="statPending">342</div>
-            <div class="stat-label">Pending<br>বিচারাধীন</div>
-          </div>
-          <div class="stat-card progress">
-            <div class="stat-icon"><i class="fas fa-spinner"></i></div>
-            <div class="stat-value" id="statProgress">415</div>
-            <div class="stat-label">In Progress<br>চলমান</div>
-          </div>
-          <div class="stat-card resolved">
-            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-            <div class="stat-value" id="statResolved">456</div>
-            <div class="stat-label">Resolved<br>সমাধানকৃত</div>
-          </div>
-          <div class="stat-card escalated">
-            <div class="stat-icon"><i class="fas fa-arrow-up"></i></div>
-            <div class="stat-value" id="statEscalated">35</div>
-            <div class="stat-label">Escalated<br>উচ্চতর কর্তৃপক্ষে</div>
-          </div>
-          <div class="stat-card rate">
-            <div class="stat-icon"><i class="fas fa-percentage"></i></div>
-            <div class="stat-value" id="statRate">36.5%</div>
-            <div class="stat-label">Resolution Rate<br>সমাধানের হার</div>
-          </div>
-        </div>
-
-        <div class="dashboard-section">
-          <h3 class="section-title">Category-wise Complaints</h3>
-          <span class="bn-label section-subtitle">বিভাগ অনুযায়ী অভিযোগ</span>
-          <div class="chart-container" id="categoryChart"></div>
-        </div>
-
-        <div class="dashboard-section">
-          <h3 class="section-title">Ageing of Pending Grievances</h3>
-          <span class="bn-label section-subtitle">বিচারাধীন অভিযোগের বয়সসীমা</span>
-          <div class="ageing-chart" id="ageingChart"></div>
-        </div>
-
-        <div class="quick-links">
-          <a href="#" class="quick-link-card">
-            <div class="quick-link-icon"><i class="fas fa-table"></i></div>
-            <div>
-              <strong>Master Tracking Sheet</strong>
-              <span class="bn-label">মাস্টার ট্র্যাকিং শীট</span>
-            </div>
-            <i class="fas fa-arrow-right"></i>
-          </a>
-          <a href="#" class="quick-link-card">
-            <div class="quick-link-icon"><i class="fas fa-folder"></i></div>
-            <div>
-              <strong>Evidence Drive</strong>
-              <span class="bn-label">প্রমাণ ড্রাইভ</span>
-            </div>
-            <i class="fas fa-arrow-right"></i>
-          </a>
-        </div>
-
-        <div class="admin-actions" id="adminActions" style="display:none">
-          <button class="btn btn-outline btn-block" onclick="navigateTo('users')">
-            <i class="fas fa-users"></i> User Management / ব্যবহারকারী ব্যবস্থাপনা
-          </button>
-        </div>
-      </section>
-
-      <!-- USER MANAGEMENT PAGE -->
-      <section class="page" id="page-users">
-        <div class="page-header">
-          <button class="back-btn" onclick="navigateTo('dashboard')">
-            <i class="fas fa-arrow-left"></i>
-          </button>
-          <div>
-            <h2>User Management</h2>
-            <span class="bn-label">ব্যবহারকারী ব্যবস্থাপনা</span>
-          </div>
-        </div>
-
-        <div class="form-card">
-          <h3 class="card-title">Create New User</h3>
-          <form id="createUserForm" onsubmit="return handleCreateUser(event)">
-            <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <span class="bn-label">সম্পূর্ণ নাম</span>
-              <input type="text" class="form-control" id="newUserName" required placeholder="Enter full name">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Mobile Number</label>
-              <span class="bn-label">মোবাইল নম্বর</span>
-              <input type="tel" class="form-control" id="newUserMobile" pattern="[0-9]{10}" required placeholder="Enter mobile number">
-            </div>
-            <div class="form-group">
-              <label class="form-label">4-Digit PIN</label>
-              <span class="bn-label">৪-সংখ্যার পিন</span>
-              <input type="password" class="form-control" id="newUserPin" maxlength="4" required placeholder="••••">
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Role</label>
-                <span class="bn-label">ভূমিকা</span>
-                <select class="form-control" id="newUserRole" required>
-                  <option value="Admin">Admin</option>
-                  <option value="Operator">Operator</option>
-                  <option value="Viewer">Viewer</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">GP Assignment</label>
-                <span class="bn-label">জিপি অ্যাসাইনমেন্ট</span>
-                <select class="form-control" id="newUserGP" required>
-                  <option value="HQ">HQ</option>
-                  <option value="Gazole I">Gazole I</option>
-                  <option value="Gazole II">Gazole II</option>
-                  <option value="Alal">Alal</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">
-              <i class="fas fa-user-plus"></i> Create User / ব্যবহারকারী তৈরি করুন
-            </button>
-          </form>
-        </div>
-
-        <div class="users-list-container">
-          <div class="list-header">
-            <h3>System Users</h3>
-            <div class="search-bar small">
-              <i class="fas fa-search"></i>
-              <input type="text" placeholder="Filter by name or GP" id="userSearch" oninput="filterUsers()">
-            </div>
-          </div>
-          <div class="users-table-wrapper">
-            <table class="users-table">
-              <thead>
-                <tr>
-                  <th>User ID</th>
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>GP</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="usersTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- SUCCESS/ACKNOWLEDGEMENT PAGE -->
+      <!-- SUCCESS PAGE -->
       <section class="page" id="page-success">
         <div class="success-container">
-          <div class="success-icon">
-            <i class="fas fa-check-circle"></i>
-          </div>
+          <div class="success-icon"><i class="fas fa-check-circle"></i></div>
           <h2>Grievance Submitted!</h2>
           <p class="bn-label">অভিযোগ সফলভাবে জমা দেওয়া হয়েছে</p>
 
           <div class="complaint-id-card">
             <div class="id-label">Your Complaint ID / আপনার অভিযোগ আইডি</div>
             <div class="id-value" id="successComplaintId">GZL/JS/2026/GAZOLE-I/0001</div>
-            <button class="copy-btn" onclick="copyComplaintId()">
-              <i class="fas fa-copy"></i> <span id="copyText">Copy</span>
-            </button>
+            <button class="copy-btn" onclick="copyComplaintId()"><i class="fas fa-copy"></i> <span id="copyText">Copy</span></button>
           </div>
 
           <div class="info-box">
             <i class="fas fa-info-circle"></i>
-            <p>Please save this ID. You can track your grievance status using this ID from the My Grievances section.</p>
-            <p class="bn-label">অনুগ্রহ করে এই আইডি সংরক্ষণ করুন। আপনি আমার অভিযোগ বিভাগ থেকে এই আইডি ব্যবহার করে আপনার অভিযোগের অবস্থা ট্র্যাক করতে পারেন।</p>
+            <div>
+              <p>Please save this ID. You can track your grievance status using this ID.</p>
+              <p class="bn-label">অনুগ্রহ করে এই আইডি সংরক্ষণ করুন।</p>
+            </div>
           </div>
 
           <div class="success-actions">
-            <button class="btn btn-primary btn-block" onclick="downloadAcknowledgement()">
-              <i class="fas fa-download"></i> Download Acknowledgement
-              <span class="btn-bn">স্বীকৃতিপত্র ডাউনলোড করুন</span>
-            </button>
-            <button class="btn btn-outline btn-block" onclick="resetAndSubmitAnother()">
-              <i class="fas fa-plus"></i> Submit Another Complaint
-              <span class="btn-bn">আরেকটি অভিযোগ জমা দিন</span>
-            </button>
-            <button class="btn btn-text" onclick="navigateTo('home')">
-              Return to Home / মূল পাতায় ফিরে যান
-            </button>
+            <button class="btn btn-primary btn-block" onclick="downloadAcknowledgement()"><i class="fas fa-download"></i> Download Acknowledgement <span class="btn-bn">স্বীকৃতিপত্র ডাউনলোড করুন</span></button>
+            <button class="btn btn-outline btn-block" onclick="resetAndSubmitAnother()"><i class="fas fa-plus"></i> Submit Another Complaint <span class="btn-bn">আরেকটি অভিযোগ জমা দিন</span></button>
+            <button class="btn btn-text" onclick="navigateTo('home')">Return to Home / মূল পাতায় ফিরে যান</button>
           </div>
         </div>
       </section>
 
+      <!-- Other pages (Grievances, Track, Login, Dashboard, Details, Users) will be rendered similarly with strict design tokens -->
+      <section class="page" id="page-grievances"><div class="page-header"><h2>Grievances List</h2><span class="bn-label">অভিযোগের তালিকা</span></div><div id="grievancesList"></div></section>
+      <section class="page" id="page-track"><div class="page-header"><h2>Track Grievance Status</h2><span class="bn-label">অভিযোগের অবস্থা ট্র্যাক করুন</span></div><div id="trackResult"></div></section>
+      <section class="page" id="page-login"><div class="login-container"><h2>Official Portal</h2><span class="bn-label">অফিসিয়াল পোর্টাল</span><form id="officerLoginForm"><div class="form-group"><label class="form-label"><span class="label-en">Mobile Number</span><span class="label-bn">মোবাইল নম্বর</span></label><input type="tel" class="form-control" id="loginMobile" required></div><div class="form-group"><label class="form-label"><span class="label-en">4-Digit PIN</span><span class="label-bn">৪-সংখ্যার পিন</span></label><input type="password" class="form-control" id="loginPin" maxlength="4" required></div><button type="submit" class="btn btn-primary btn-block btn-lg">Login / লগইন</button></form></div></section>
+      <section class="page" id="page-dashboard"><div class="dashboard-welcome"><h2>Welcome, <span id="dashUserName">BDO Gazole</span></h2><p class="bn-label">স্বাগতম, বিডিও গাজোল</p></div><div class="stats-grid" id="statsGrid"></div></section>
     </main>
 
-    <!-- ===== BOTTOM NAVIGATION ===== -->
-    <nav class="bottom-nav" id="bottomNav">
+    <!-- BOTTOM NAVIGATION (Exactly 4 slots as per design) -->
+    <nav class="bottom-nav">
       <a href="#" class="nav-item active" data-page="home" onclick="navigateTo('home'); return false;">
         <i class="fas fa-home"></i>
         <span>Home</span>
@@ -740,12 +291,7 @@
         <span>Grievances</span>
         <span class="nav-bn">অভিযোগ</span>
       </a>
-      <a href="#" class="nav-item central" data-page="submit" onclick="navigateTo('submit'); return false;">
-        <i class="fas fa-plus-circle"></i>
-        <span>New</span>
-        <span class="nav-bn">নতুন</span>
-      </a>
-      <a href="#" class="nav-item" data-page="profile" onclick="navigateTo('login'); return false;">
+      <a href="#" class="nav-item" data-page="login" onclick="navigateTo('login'); return false;">
         <i class="fas fa-user"></i>
         <span>Profile</span>
         <span class="nav-bn">প্রোফাইল</span>
@@ -757,18 +303,13 @@
       </a>
     </nav>
 
-    <!-- ===== MODALS ===== -->
-
-    <!-- Add Category Modal -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="addCategoryModal">
       <div class="modal">
-        <div class="modal-header">
-          <h3>Add New Category</h3>
-          <button class="modal-close" onclick="closeModal('addCategoryModal')"><i class="fas fa-times"></i></button>
-        </div>
+        <div class="modal-header"><h3>Add New Category</h3><button class="modal-close" onclick="closeModal('addCategoryModal')"><i class="fas fa-times"></i></button></div>
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Category Name</label>
+            <label class="form-label"><span class="label-en">Category Name</span><span class="label-bn">বিভাগের নাম</span></label>
             <input type="text" class="form-control" id="newCategoryName" placeholder="Enter category name">
           </div>
         </div>
@@ -779,71 +320,14 @@
       </div>
     </div>
 
-    <!-- Update Status Modal -->
-    <div class="modal-overlay" id="updateStatusModal">
-      <div class="modal">
-        <div class="modal-header">
-          <h3>Update Status</h3>
-          <span class="bn-label">স্ট্যাটাস আপডেট করুন</span>
-          <button class="modal-close" onclick="closeModal('updateStatusModal')"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label">New Status</label>
-            <span class="bn-label">নতুন স্ট্যাটাস</span>
-            <select class="form-control" id="updateStatus">
-              <option value="">Select Status...</option>
-              <option value="Pending">Pending</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Escalated">Escalated</option>
-              <option value="Closed">Closed</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Action Taken</label>
-            <span class="bn-label">গৃহীত পদক্ষেপ</span>
-            <select class="form-control" id="updateAction">
-              <option value="">Select Action...</option>
-              <option value="Site Visit Conducted">Site Visit Conducted</option>
-              <option value="Contacted Citizen">Contacted Citizen</option>
-              <option value="Forwarded to Department">Forwarded to Department</option>
-              <option value="Benefitted">Benefitted</option>
-              <option value="Beyond Jurisdiction">Beyond Jurisdiction</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Remarks</label>
-            <span class="bn-label">মন্তব্য</span>
-            <textarea class="form-control" id="updateRemarks" rows="3" placeholder="Enter detailed remarks..."></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal('updateStatusModal')">
-            Cancel / বাতিল
-          </button>
-          <button class="btn btn-primary" onclick="saveStatusUpdate()">
-            Save Changes / সংরক্ষণ করুন
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Info Modal -->
     <div class="modal-overlay" id="infoModal">
       <div class="modal">
-        <div class="modal-header">
-          <h3 id="infoModalTitle">Information</h3>
-          <button class="modal-close" onclick="closeModal('infoModal')"><i class="fas fa-times"></i></button>
-        </div>
+        <div class="modal-header"><h3 id="infoModalTitle">Information</h3><button class="modal-close" onclick="closeModal('infoModal')"><i class="fas fa-times"></i></button></div>
         <div class="modal-body" id="infoModalBody"></div>
       </div>
     </div>
 
-    <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
-
   </div>
 
   <script src="js/app.js"></script>

@@ -3,333 +3,349 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>GAZOLE JAN SHUNANI - গাজোল জনশুনানি</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>GAZOLE JAN SHUNANI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* SAFFRON THEME COLORS */
+    :root { 
+      --primary: #E65100; /* Deep Saffron */
+      --primary-container: #FF9800; /* Light Saffron/Orange */
+      --accent: #FF6D00; /* Vibrant Orange for CTA */
+      --bg: #FFF8E1; /* Very light saffron tint background */
+      --surface: #ffffff; 
+      --text: #3E2723; 
+      --outline: #9E9E9E; 
+      --primary-fixed: #FFE0B2; /* Focus ring color */
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', 'Noto Sans Bengali', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+    
+    .progress-sticky { position: sticky; top: 0; z-index: 100; background: var(--surface); padding: 12px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .progress-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .progress-step .circle { width: 28px; height: 28px; border-radius: 50%; background: var(--outline); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; z-index: 2; transition: 0.3s; }
+    .progress-step.active .circle { background: var(--primary); box-shadow: 0 0 0 4px var(--primary-fixed); }
+    .progress-step.completed .circle { background: #2E7D32; } /* Green for completed */
+    .progress-step .label { font-size: 10px; margin-top: 4px; color: var(--outline); font-weight: 600; text-align: center; }
+    .progress-step.active .label { color: var(--primary); }
+    .progress-line { position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: var(--outline); z-index: 1; }
+    .progress-step:last-child .progress-line { display: none; }
+    .progress-step.completed .progress-line { background: #2E7D32; }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+    .header { text-align: center; padding: 20px 0; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%); color: white; margin-bottom: 16px; }
+    .header h1 { font-size: 20px; }
+    .header h2 { font-size: 14px; opacity: 0.95; font-family: 'Noto Sans Bengali'; }
+
+    .section { background: var(--surface); padding: 16px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid var(--primary); }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .bn-label { display: block; font-size: 11px; color: var(--outline); font-family: 'Noto Sans Bengali'; margin-bottom: 6px; }
+    
+    .form-control { width: 100%; padding: 12px; border: 1px solid var(--outline); border-radius: 8px; font-size: 15px; font-family: 'Inter', sans-serif; text-transform: uppercase; background: #fff; }
+    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-fixed); }
+    select.form-control { text-transform: none; }
+
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .upload-zone { border: 2px dashed var(--primary-container); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; background: #FFF3E0; transition: 0.3s; }
+    .upload-zone:active { background: #FFE0B2; border-color: var(--primary); }
+    .file-list { margin-top: 12px; }
+    .file-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #FFF3E0; border-radius: 6px; margin-bottom: 8px; font-size: 13px; border: 1px solid var(--primary-container); }
+    .file-item .remove { color: #D32F2F; cursor: pointer; padding: 4px; }
+
+    .success-screen { text-align: center; padding: 40px 20px; display: none; }
+    .success-icon { font-size: 64px; color: #2E7D32; margin-bottom: 16px; }
+    .complaint-id-box { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%); color: white; padding: 16px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 18px; font-weight: 700; word-break: break-all; }
+
+    .spinner-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.95); z-index: 999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #ddd; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #3E2723; color: white; padding: 12px 24px; border-radius: 24px; font-size: 14px; z-index: 1000; display: none; text-align: center; max-width: 90%; }
+  </style>
 </head>
 <body>
 
-  <div id="app">
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="header-content">
-        <div class="header-logo">
-          <i class="fas fa-landmark"></i>
-          <div class="header-title">
-            <h1>GAZOLE JAN SHUNANI</h1>
-            <h2>গাজোল জনশুনানি</h2>
-          </div>
-        </div>
-        <button class="header-action" onclick="navigateTo('login')">
-          <i class="fas fa-user-shield"></i>
-        </button>
-      </div>
-    </header>
+  <div class="spinner-overlay" id="spinner">
+    <div class="spinner"></div>
+    <p style="margin-top: 12px; font-weight: 600; color: var(--primary);">Processing...</p>
+  </div>
+  <div class="toast" id="toast"></div>
 
-    <main class="main-content">
-      <!-- HOME PAGE -->
-      <section class="page active" id="page-home">
-        <div class="hero-banner">
-          <div class="hero-badge">Public Grievance Hearing & Redressal System</div>
-          <h2 class="hero-title">Your Grievance, Our Priority</h2>
-          <p class="hero-subtitle">আপনার অভিযোগ, আমাদের অগ্রাধিকার</p>
-          <div class="hero-actions">
-            <button class="hero-btn primary" onclick="navigateTo('submit')">
-              <i class="fas fa-edit"></i>
-              <span>Submit Complaint</span>
-              <span class="btn-bn">অভিযোগ দাখিল করুন</span>
-            </button>
-            <button class="hero-btn secondary" onclick="navigateTo('track')">
-              <i class="fas fa-search"></i>
-              <span>Track Status</span>
-              <span class="btn-bn">Status দেখুন</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="card hearing-card">
-          <div class="card-header">
-            <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
-            <div>
-              <h3>Hearing Schedule</h3>
-              <span class="bn-label">জনশুনানির সময়</span>
-            </div>
-          </div>
-          <div class="card-body">
-            <p class="highlight-text">মঙ্গলবার ও বৃহস্পতিবার, সকাল 10:30টা - দুপুর 1:00টা</p>
-            <p class="sub-text">Tuesday & Thursday, 10:30 AM - 1:00 PM</p>
-          </div>
-        </div>
-
-        <div class="info-grid">
-          <div class="card clickable" onclick="showInfoModal('how')">
-            <div class="card-header">
-              <div class="icon-box"><i class="fas fa-question-circle"></i></div>
-              <div>
-                <h3>How it works</h3>
-                <span class="bn-label">কীভাবে কাজ করে</span>
-              </div>
-            </div>
-            <i class="fas fa-chevron-right info-arrow"></i>
-          </div>
-          <div class="card clickable" onclick="showInfoModal('contact')">
-            <div class="card-header">
-              <div class="icon-box"><i class="fas fa-phone"></i></div>
-              <div>
-                <h3>Contact Us</h3>
-                <span class="bn-label">যোগাযোগ করুন</span>
-              </div>
-            </div>
-            <i class="fas fa-chevron-right info-arrow"></i>
-          </div>
-        </div>
-      </section>
-
-      <!-- SUBMIT PAGE -->
-      <section class="page" id="page-submit">
-        <div class="page-header">
-          <h2>Submit New Complaint</h2>
-          <span class="bn-label">নতুন অভিযোগ দাখিল করুন</span>
-        </div>
-
-        <div class="progress-stepper">
-          <div class="step active" data-step="1">
-            <div class="step-circle">1</div>
-            <span class="step-label">Info</span>
-          </div>
-          <div class="step-line"></div>
-          <div class="step" data-step="2">
-            <div class="step-circle">2</div>
-            <span class="step-label">Details</span>
-          </div>
-          <div class="step-line"></div>
-          <div class="step" data-step="3">
-            <div class="step-circle">3</div>
-            <span class="step-label">Evidence</span>
-          </div>
-        </div>
-
-        <form id="grievanceForm">
-          <!-- Step 1 -->
-          <div class="form-step active" id="step-1">
-            <div class="section-header">
-              <div class="icon-box primary"><i class="fas fa-user"></i></div>
-              <div>
-                <h3>Complainant Information</h3>
-                <span class="bn-label">ব্যক্তিগত তথ্য</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"><span class="label-en">Full Name</span><span class="label-bn">সম্পূর্ণ নাম</span></label>
-              <input type="text" class="form-control" id="fullName" required placeholder="Enter full name">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"><span class="label-en">Mobile Number</span><span class="label-bn">মোবাইল নম্বর</span></label>
-              <input type="tel" class="form-control" id="mobile" pattern="[0-9]{10}" required placeholder="10-digit mobile number">
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label"><span class="label-en">Relation</span><span class="label-bn">সম্পর্ক</span></label>
-                <select class="form-control" id="relation" required>
-                  <option value="">Select</option>
-                  <option value="S/O">S/O</option>
-                  <option value="D/O">D/O</option>
-                  <option value="W/O">W/O</option>
-                  <option value="C/O">C/O</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label"><span class="label-en">Guardian's Name</span><span class="label-bn">অভিভাবকের নাম</span></label>
-                <input type="text" class="form-control" id="guardianName" required placeholder="Enter guardian name">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"><span class="label-en">Gram Panchayat</span><span class="label-bn">গ্রাম পঞ্চায়েত</span></label>
-              <select class="form-control" id="gramPanchayat" required>
-                <option value="">Select GP</option>
-                <option value="Gazole I">Gazole I</option>
-                <option value="Gazole II">Gazole II</option>
-                <option value="Alal">Alal</option>
-                <option value="Bairgachi I">Bairgachi I</option>
-                <option value="Bairgachi II">Bairgachi II</option>
-                <option value="Babupur">Babupur</option>
-                <option value="Chaknagar">Chaknagar</option>
-                <option value="Deotala">Deotala</option>
-                <option value="Majhra">Majhra</option>
-                <option value="Karkach">Karkach</option>
-                <option value="Pandua">Pandua</option>
-                <option value="Raniganj I">Raniganj I</option>
-                <option value="Raniganj II">Raniganj II</option>
-                <option value="Salaidanga">Salaidanga</option>
-                <option value="Sahajadpur">Sahajadpur</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"><span class="label-en">Village/Locality</span><span class="label-bn">গ্রাম/এলাকা</span></label>
-              <input type="text" class="form-control" id="village" required placeholder="Enter village or locality name">
-            </div>
-
-            <button type="button" class="btn btn-primary btn-block" onclick="nextStep(2)">Next: Details <i class="fas fa-arrow-right"></i></button>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="form-step" id="step-2">
-            <div class="section-header">
-              <div class="icon-box primary"><i class="fas fa-clipboard-list"></i></div>
-              <div>
-                <h3>Complaint Details</h3>
-                <span class="bn-label">অভিযোগের বিবরণ</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"><span class="label-en">Complaint Category</span><span class="label-bn">অভিযোগের বিভাগ</span></label>
-              <div class="input-with-action">
-                <select class="form-control" id="category" required>
-                  <option value="">Select Category</option>
-                  <option value="Water Supply">Water Supply</option>
-                  <option value="Roads">Roads</option>
-                  <option value="Electricity">Electricity</option>
-                  <option value="Panchayat Services">Panchayat Services</option>
-                  <option value="Other">Other</option>
-                </select>
-                <button type="button" class="btn-icon" onclick="openAddCategoryModal()"><i class="fas fa-plus"></i></button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"><span class="label-en">Detailed Description</span><span class="label-bn">বিস্তারিত বিবরণ</span></label>
-              <textarea class="form-control" id="description" rows="5" required placeholder="Describe the issue clearly..."></textarea>
-            </div>
-
-            <div class="step-actions">
-              <button type="button" class="btn btn-outline" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
-              <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next: Evidence <i class="fas fa-arrow-right"></i></button>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="form-step" id="step-3">
-            <div class="section-header">
-              <div class="icon-box primary"><i class="fas fa-upload"></i></div>
-              <div>
-                <h3>Evidence Upload</h3>
-                <span class="bn-label">প্রমাণ আপলোড</span>
-              </div>
-            </div>
-
-            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-              <i class="fas fa-cloud-upload-alt upload-icon"></i>
-              <p class="upload-text">Drag and drop files here</p>
-              <p class="upload-hint">Supported formats: JPG, PNG, PDF (Max 5MB)</p>
-              <button type="button" class="btn btn-outline"><i class="fas fa-folder-open"></i> Browse Files</button>
-            </div>
-            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf" style="display:none" onchange="handleFileSelect(event)">
-            <div class="file-list" id="fileList"></div>
-
-            <div class="step-actions">
-              <button type="button" class="btn btn-outline" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
-              <button type="submit" class="btn btn-accent"><i class="fas fa-paper-plane"></i> Submit Grievance <span class="btn-bn">অভিযোগ জমা দিন</span></button>
-            </div>
-          </div>
-        </form>
-      </section>
-
-      <!-- SUCCESS PAGE -->
-      <section class="page" id="page-success">
-        <div class="success-container">
-          <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-          <h2>Grievance Submitted!</h2>
-          <p class="bn-label">অভিযোগ সফলভাবে জমা দেওয়া হয়েছে</p>
-
-          <div class="complaint-id-card">
-            <div class="id-label">Your Complaint ID / আপনার অভিযোগ আইডি</div>
-            <div class="id-value" id="successComplaintId">GZL/JS/2026/GAZOLE-I/0001</div>
-            <button class="copy-btn" onclick="copyComplaintId()"><i class="fas fa-copy"></i> <span id="copyText">Copy</span></button>
-          </div>
-
-          <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            <div>
-              <p>Please save this ID. You can track your grievance status using this ID.</p>
-              <p class="bn-label">অনুগ্রহ করে এই আইডি সংরক্ষণ করুন।</p>
-            </div>
-          </div>
-
-          <div class="success-actions">
-            <button class="btn btn-primary btn-block" onclick="downloadAcknowledgement()"><i class="fas fa-download"></i> Download Acknowledgement <span class="btn-bn">স্বীকৃতিপত্র ডাউনলোড করুন</span></button>
-            <button class="btn btn-outline btn-block" onclick="resetAndSubmitAnother()"><i class="fas fa-plus"></i> Submit Another Complaint <span class="btn-bn">আরেকটি অভিযোগ জমা দিন</span></button>
-            <button class="btn btn-text" onclick="navigateTo('home')">Return to Home / মূল পাতায় ফিরে যান</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Other pages (Grievances, Track, Login, Dashboard, Details, Users) will be rendered similarly with strict design tokens -->
-      <section class="page" id="page-grievances"><div class="page-header"><h2>Grievances List</h2><span class="bn-label">অভিযোগের তালিকা</span></div><div id="grievancesList"></div></section>
-      <section class="page" id="page-track"><div class="page-header"><h2>Track Grievance Status</h2><span class="bn-label">অভিযোগের অবস্থা ট্র্যাক করুন</span></div><div id="trackResult"></div></section>
-      <section class="page" id="page-login"><div class="login-container"><h2>Official Portal</h2><span class="bn-label">অফিসিয়াল পোর্টাল</span><form id="officerLoginForm"><div class="form-group"><label class="form-label"><span class="label-en">Mobile Number</span><span class="label-bn">মোবাইল নম্বর</span></label><input type="tel" class="form-control" id="loginMobile" required></div><div class="form-group"><label class="form-label"><span class="label-en">4-Digit PIN</span><span class="label-bn">৪-সংখ্যার পিন</span></label><input type="password" class="form-control" id="loginPin" maxlength="4" required></div><button type="submit" class="btn btn-primary btn-block btn-lg">Login / লগইন</button></form></div></section>
-      <section class="page" id="page-dashboard"><div class="dashboard-welcome"><h2>Welcome, <span id="dashUserName">BDO Gazole</span></h2><p class="bn-label">স্বাগতম, বিডিও গাজোল</p></div><div class="stats-grid" id="statsGrid"></div></section>
-    </main>
-
-    <!-- BOTTOM NAVIGATION (Exactly 4 slots as per design) -->
-    <nav class="bottom-nav">
-      <a href="#" class="nav-item active" data-page="home" onclick="navigateTo('home'); return false;">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-        <span class="nav-bn">হোম</span>
-      </a>
-      <a href="#" class="nav-item" data-page="grievances" onclick="navigateTo('grievances'); return false;">
-        <i class="fas fa-clipboard-list"></i>
-        <span>Grievances</span>
-        <span class="nav-bn">অভিযোগ</span>
-      </a>
-      <a href="#" class="nav-item" data-page="login" onclick="navigateTo('login'); return false;">
-        <i class="fas fa-user"></i>
-        <span>Profile</span>
-        <span class="nav-bn">প্রোফাইল</span>
-      </a>
-      <a href="#" class="nav-item" data-page="support" onclick="showInfoModal('contact'); return false;">
-        <i class="fas fa-headset"></i>
-        <span>Support</span>
-        <span class="nav-bn">সহায়তা</span>
-      </a>
-    </nav>
-
-    <!-- MODALS -->
-    <div class="modal-overlay" id="addCategoryModal">
-      <div class="modal">
-        <div class="modal-header"><h3>Add New Category</h3><button class="modal-close" onclick="closeModal('addCategoryModal')"><i class="fas fa-times"></i></button></div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label"><span class="label-en">Category Name</span><span class="label-bn">বিভাগের নাম</span></label>
-            <input type="text" class="form-control" id="newCategoryName" placeholder="Enter category name">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-outline" onclick="closeModal('addCategoryModal')">Cancel</button>
-          <button class="btn btn-primary" onclick="addNewCategory()">Add Category</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-overlay" id="infoModal">
-      <div class="modal">
-        <div class="modal-header"><h3 id="infoModalTitle">Information</h3><button class="modal-close" onclick="closeModal('infoModal')"><i class="fas fa-times"></i></button></div>
-        <div class="modal-body" id="infoModalBody"></div>
-      </div>
-    </div>
-
-    <div class="toast" id="toast"></div>
+  <div class="header">
+    <h1>GAZOLE JAN SHUNANI</h1>
+    <h2>গাজোল জনশুনানি</h2>
   </div>
 
-  <script src="js/app.js"></script>
+  <div class="container success-screen" id="successScreen">
+    <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+    <h2>অভিযোগ সফলভাবে জমা হয়েছে!</h2>
+    <p class="bn-label" style="margin-top: 8px;">Grievance Submitted Successfully</p>
+    <div class="complaint-id-box" id="displayComplaintId">GZL/JS/2026/GAZOLE-I/0001</div>
+    <p style="font-size: 13px; color: #666; margin-bottom: 24px;">
+      অনুগ্রহ করে এই ID সংরক্ষণ করুন।<br>Please save this ID to track your status.
+    </p>
+    <button class="btn btn-primary" onclick="resetForm()">
+      <i class="fas fa-plus"></i> নতুন অভিযোগ দাখিল করুন (New Complaint)
+    </button>
+  </div>
+
+  <div class="container" id="formContainer">
+    <div class="progress-sticky">
+      <div class="progress-step active" id="prog-1">
+        <div class="progress-line"></div>
+        <div class="circle">1</div>
+        <span class="label">Info<br>তথ্য</span>
+      </div>
+      <div class="progress-step" id="prog-2">
+        <div class="progress-line"></div>
+        <div class="circle">2</div>
+        <span class="label">Details<br>বিবরণ</span>
+      </div>
+      <div class="progress-step" id="prog-3">
+        <div class="circle">3</div>
+        <span class="label">Evidence<br>প্রমাণ</span>
+      </div>
+    </div>
+
+    <form id="grievanceForm" onsubmit="return handleSubmit(event)">
+      <div class="section" id="sec-1">
+        <div class="section-title"><i class="fas fa-user"></i> Complainant Information / ব্যক্তিগত তথ্য</div>
+        <div class="form-group">
+          <label class="form-label">Full Name <span style="color:red">*</span></label>
+          <span class="bn-label">সম্পূর্ণ নাম</span>
+          <input type="text" class="form-control" id="fullName" required oninput="this.value = this.value.toUpperCase()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobile Number <span style="color:red">*</span></label>
+          <span class="bn-label">মোবাইল নম্বর (১০ ডিজিট)</span>
+          <input type="tel" class="form-control" id="mobile" pattern="[0-9]{10}" maxlength="10" required placeholder="9876543210" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Guardian's Name (Optional)</label>
+          <span class="bn-label">অভিভাবকের নাম (ঐচ্ছিক)</span>
+          <input type="text" class="form-control" id="guardianName" oninput="this.value = this.value.toUpperCase()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gram Panchayat <span style="color:red">*</span></label>
+          <span class="bn-label">গ্রাম পঞ্চায়েত</span>
+          <select class="form-control" id="gp" required>
+            <option value="">Select GP</option>
+            <option value="GAZOLE I">GAZOLE I</option>
+            <option value="GAZOLE II">GAZOLE II</option>
+            <option value="ALAL">ALAL</option>
+            <option value="BAIRGACHI I">BAIRGACHI I</option>
+            <option value="BAIRGACHI II">BAIRGACHI II</option>
+            <option value="BABUPUR">BABUPUR</option>
+            <option value="CHAKNAGAR">CHAKNAGAR</option>
+            <option value="DEOTALA">DEOTALA</option>
+            <option value="MAJHRA">MAJHRA</option>
+            <option value="KARKACH">KARKACH</option>
+            <option value="PANDUA">PANDUA</option>
+            <option value="RANIGANJ I">RANIGANJ I</option>
+            <option value="RANIGANJ II">RANIGANJ II</option>
+            <option value="SALAIDANGA">SALAIDANGA</option>
+            <option value="SAHAJADPUR">SAHAJADPUR</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Village / Locality <span style="color:red">*</span></label>
+          <span class="bn-label">গ্রাম / এলাকা</span>
+          <input type="text" class="form-control" id="village" required oninput="this.value = this.value.toUpperCase()">
+        </div>
+      </div>
+
+      <div class="section" id="sec-2">
+        <div class="section-title"><i class="fas fa-clipboard-list"></i> Complaint Details / অভিযোগের বিবরণ</div>
+        <div class="form-group">
+          <label class="form-label">Category <span style="color:red">*</span></label>
+          <span class="bn-label">অভিযোগের বিভাগ</span>
+          <select class="form-control" id="category" required>
+            <option value="">Select Category</option>
+            <option value="WATER SUPPLY">WATER SUPPLY</option>
+            <option value="ROADS">ROADS</option>
+            <option value="ELECTRICITY">ELECTRICITY</option>
+            <option value="PANCHAYAT SERVICES">PANCHAYAT SERVICES</option>
+            <option value="SANITATION">SANITATION</option>
+            <option value="HEALTH">HEALTH</option>
+            <option value="EDUCATION">EDUCATION</option>
+            <option value="OTHER">OTHER</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Detailed Description <span style="color:red">*</span></label>
+          <span class="bn-label">বিস্তারিত বিবরণ</span>
+          <textarea class="form-control" id="description" rows="4" required oninput="this.value = this.value.toUpperCase()" placeholder="DESCRIBE THE ISSUE CLEARLY..."></textarea>
+        </div>
+      </div>
+
+      <div class="section" id="sec-3">
+        <div class="section-title"><i class="fas fa-upload"></i> Evidence Upload / প্রমাণ আপলোড</div>
+        <!-- CAMERA OPTION: capture="environment" opens rear camera on mobile -->
+        <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-camera" style="font-size: 32px; color: var(--primary); margin-bottom: 8px;"></i>
+          <p style="font-weight: 600; color: var(--primary);">Tap to Open Camera or Gallery</p>
+          <p class="bn-label">JPG, PNG, PDF (Max 5MB each, Multiple allowed)</p>
+        </div>
+        <input type="file" id="fileInput" multiple accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFiles(this.files)">
+        <div class="file-list" id="fileList"></div>
+      </div>
+
+      <button type="submit" class="btn btn-accent" id="submitBtn" style="margin-top: 8px; margin-bottom: 24px;">
+        <i class="fas fa-paper-plane"></i> SUBMIT GRIEVANCE / অভিযোগ জমা দিন
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzp8cgv3lmtub561SnBwULQXlFB3qXxuduc0ENC6CmJWGzP4Ig0DgIzbYfNmvt1zDGbcA/exec';
+    let uploadedFiles = [];
+
+    window.addEventListener('scroll', () => {
+      const sec1 = document.getElementById('sec-1').getBoundingClientRect().top;
+      const sec2 = document.getElementById('sec-2').getBoundingClientRect().top;
+      const sec3 = document.getElementById('sec-3').getBoundingClientRect().top;
+      document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active', 'completed'));
+      if (sec3 < 200) {
+        document.getElementById('prog-3').classList.add('active');
+        document.getElementById('prog-2').classList.add('completed');
+        document.getElementById('prog-1').classList.add('completed');
+      } else if (sec2 < 200) {
+        document.getElementById('prog-2').classList.add('active');
+        document.getElementById('prog-1').classList.add('completed');
+      } else {
+        document.getElementById('prog-1').classList.add('active');
+      }
+    });
+
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        if (file.size > 5 * 1024 * 1024) {
+          showToast('File too large! Max 5MB allowed.', 'error');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedFiles.push({ name: file.name, mimeType: file.type, data: e.target.result });
+          renderFiles();
+        };
+        reader.readAsDataURL(file);
+      });
+      document.getElementById('fileInput').value = ''; // Reset to allow re-selecting same file
+    }
+
+    function renderFiles() {
+      const container = document.getElementById('fileList');
+      container.innerHTML = uploadedFiles.map((f, i) => `
+        <div class="file-item">
+          <span><i class="fas fa-file-image" style="color:var(--primary); margin-right:6px;"></i> ${f.name}</span>
+          <span class="remove" onclick="removeFile(${i})"><i class="fas fa-times-circle"></i></span>
+        </div>
+      `).join('');
+    }
+
+    function removeFile(index) {
+      uploadedFiles.splice(index, 1);
+      renderFiles();
+    }
+
+    function showToast(msg, type) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.background = type === 'error' ? '#D32F2F' : '#2E7D32';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const mobile = document.getElementById('mobile').value;
+      if (mobile.length !== 10) {
+        showToast('মোবাইল নম্বর অবশ্যই ১০ ডিজিটের হতে হবে', 'error');
+        return false;
+      }
+
+      document.getElementById('spinner').style.display = 'flex';
+      document.getElementById('submitBtn').disabled = true;
+
+      // Step 1: Check Duplicate via Fetch
+      fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'checkDuplicate', mobile: mobile })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.isDuplicate) {
+          document.getElementById('spinner').style.display = 'none';
+          document.getElementById('submitBtn').disabled = false;
+          showToast('এই মোবাইল নম্বর দিয়ে আগেই অভিযোগ জমা দেওয়া হয়েছে!', 'error');
+        } else {
+          proceedSubmission();
+        }
+      })
+      .catch(err => {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        showToast('Network Error. Check internet connection.', 'error');
+      });
+      return false;
+    }
+
+    function proceedSubmission() {
+      const formData = {
+        fullName: document.getElementById('fullName').value,
+        mobile: document.getElementById('mobile').value,
+        guardianName: document.getElementById('guardianName').value,
+        gp: document.getElementById('gp').value,
+        village: document.getElementById('village').value,
+        category: document.getElementById('category').value,
+        description: document.getElementById('description').value,
+        files: uploadedFiles,
+        source: 'Mobile App'
+      };
+
+      // Step 2: Submit via Fetch
+      fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'submit', formData: formData })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        
+        if (data.success) {
+          document.getElementById('displayComplaintId').textContent = data.complaintId;
+          document.getElementById('formContainer').style.display = 'none';
+          document.getElementById('successScreen').style.display = 'block';
+          window.scrollTo(0, 0);
+        } else {
+          showToast(data.error, 'error');
+        }
+      })
+      .catch(err => {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        showToast('Submission Failed. Check internet.', 'error');
+      });
+    }
+
+    function resetForm() {
+      document.getElementById('grievanceForm').reset();
+      uploadedFiles = [];
+      renderFiles();
+      document.getElementById('successScreen').style.display = 'none';
+      document.getElementById('formContainer').style.display = 'block';
+      window.scrollTo(0, 0);
+      document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active', 'completed'));
+      document.getElementById('prog-1').classList.add('active');
+    }
+  </script>
 </body>
 </html>

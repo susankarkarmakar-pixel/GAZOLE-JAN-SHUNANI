@@ -2,49 +2,115 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site Grievance Submission</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GAZOLE JAN SHUNANI - Grievance Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        .camera-modal { display: none; }
+        .camera-modal.active { display: flex; }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
-    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Site Grievance Form</h2>
-        
-        <form id="grievanceForm" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" name="name" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Phone</label>
-                <input type="tel" name="phone" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea name="description" rows="3" required class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+<body class="bg-gray-50 min-h-screen pb-10">
+    <!-- Header -->
+    <div class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-40">
+        <h1 class="text-xl font-bold text-center">GAZOLE JAN SHUNANI</h1>
+        <p class="text-xs text-center text-blue-200">Public Grievance Redressal Portal</p>
+    </div>
+
+    <div class="max-w-lg mx-auto p-4 mt-4">
+        <form id="grievanceForm" class="bg-white rounded-xl shadow-lg p-5 space-y-4">
+            
+            <!-- Personal Details -->
+            <div class="space-y-3">
+                <h3 class="text-blue-700 font-semibold border-b pb-1">Personal Details</h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Full Name *</label>
+                    <input type="text" name="fullName" required class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500 uppercase">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Mobile Number *</label>
+                        <input type="tel" name="mobile" pattern="[0-9]{10}" required class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500" placeholder="10 digits">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Relation</label>
+                        <select name="relation" class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="S/O">S/O</option>
+                            <option value="D/O">D/O</option>
+                            <option value="W/O">W/O</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Guardian Name</label>
+                    <input type="text" name="guardianName" class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500 uppercase">
+                </div>
             </div>
 
-            <!-- Camera Section -->
-            <div class="border-t pt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Site Photo / Supporting Documents</label>
+            <!-- Location & Category -->
+            <div class="space-y-3 pt-2">
+                <h3 class="text-blue-700 font-semibold border-b pb-1">Location & Grievance</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Gram Panchayat *</label>
+                        <select name="gramPanchayat" required class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                            <option value="">Select GP</option>
+                            <option value="Gazole I">Gazole I</option><option value="Gazole II">Gazole II</option>
+                            <option value="Alal">Alal</option><option value="Bairgachi I">Bairgachi I</option>
+                            <option value="Bairgachi II">Bairgachi II</option><option value="Babupur">Babupur</option>
+                            <option value="Chaknagar">Chaknagar</option><option value="Deotala">Deotala</option>
+                            <option value="Majhra">Majhra</option><option value="Karkach">Karkach</option>
+                            <option value="Pandua">Pandua</option><option value="Raniganj I">Raniganj I</option>
+                            <option value="Raniganj II">Raniganj II</option><option value="Salaidanga">Salaidanga</option>
+                            <option value="Sahajadpur">Sahajadpur</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Village</label>
+                        <input type="text" name="village" class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500 uppercase">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Category *</label>
+                    <select name="category" required class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                        <option value="">Select Category</option>
+                        <option value="Water Supply">Water Supply</option><option value="Roads">Roads</option>
+                        <option value="Electricity">Electricity</option><option value="Panchayat Services">Panchayat Services</option>
+                        <option value="Sanitation">Sanitation</option><option value="Health">Health</option>
+                        <option value="Education">Education</option><option value="Social Welfare">Social Welfare</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Description *</label>
+                    <textarea name="description" rows="3" required class="mt-1 block w-full rounded-md border border-gray-300 p-2.5 focus:ring-blue-500 focus:border-blue-500" placeholder="Describe your grievance in detail..."></textarea>
+                </div>
+            </div>
+
+            <!-- Camera / Photo Section -->
+            <div class="space-y-3 pt-2 border-t">
+                <h3 class="text-blue-700 font-semibold border-b pb-1">Site Photo / Evidence</h3>
+                <p class="text-xs text-gray-500">Capture a live photo or upload from gallery (Max 5MB).</p>
                 
                 <input type="file" id="fileInput" accept="image/*" capture="environment" class="hidden">
                 
-                <div class="flex gap-2 mb-2">
-                    <button type="button" id="openCameraBtn" class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition font-medium">
+                <div class="flex gap-2">
+                    <button type="button" id="openCameraBtn" class="flex-1 bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition font-medium flex items-center justify-center gap-2">
                         📷 Open Camera
                     </button>
-                    <button type="button" id="uploadGalleryBtn" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition font-medium">
+                    <button type="button" id="uploadGalleryBtn" class="flex-1 bg-gray-600 text-white py-2.5 px-4 rounded-lg hover:bg-gray-700 transition font-medium flex items-center justify-center gap-2">
                         📁 Gallery
                     </button>
                 </div>
 
                 <!-- Live Camera Modal -->
-                <div id="cameraModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center p-4">
-                    <video id="video" autoplay playsinline class="w-full max-w-md rounded-lg bg-black border-2 border-white"></video>
-                    <div class="mt-6 flex gap-4">
-                        <button type="button" id="captureBtn" class="bg-green-600 text-white py-3 px-8 rounded-full text-lg font-bold shadow-lg">Capture</button>
-                        <button type="button" id="closeCameraBtn" class="bg-red-600 text-white py-3 px-8 rounded-full text-lg font-bold shadow-lg">Cancel</button>
+                <div id="cameraModal" class="camera-modal fixed inset-0 bg-black bg-opacity-95 z-50 flex-col items-center justify-center p-4">
+                    <video id="video" autoplay playsinline class="w-full max-w-md rounded-lg bg-black border-2 border-white mb-4"></video>
+                    <div class="flex gap-4">
+                        <button type="button" id="captureBtn" class="bg-green-600 text-white py-3 px-8 rounded-full text-lg font-bold shadow-lg active:scale-95 transition">Capture</button>
+                        <button type="button" id="closeCameraBtn" class="bg-red-600 text-white py-3 px-8 rounded-full text-lg font-bold shadow-lg active:scale-95 transition">Cancel</button>
                     </div>
                 </div>
 
@@ -52,22 +118,23 @@
 
                 <!-- Image Preview -->
                 <div id="imagePreviewContainer" class="hidden mt-3 relative">
-                    <img id="imagePreview" class="w-full h-56 object-cover rounded-md border border-gray-300 shadow-sm">
-                    <button type="button" id="retakeBtn" class="absolute top-2 right-2 bg-red-500 text-white text-xs px-3 py-1 rounded-full shadow">Retake</button>
+                    <img id="imagePreview" class="w-full h-64 object-cover rounded-lg border-2 border-blue-500 shadow-md">
+                    <button type="button" id="retakeBtn" class="absolute top-2 right-2 bg-red-500 text-white text-xs px-3 py-1.5 rounded-full shadow font-medium">Retake</button>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full bg-green-600 text-white py-3 px-4 rounded-md font-bold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn" class="w-full bg-green-600 text-white py-3.5 px-4 rounded-lg font-bold text-lg hover:bg-green-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed mt-4">
                 Submit Grievance
             </button>
-            <p id="statusMessage" class="text-center text-sm mt-2 font-medium"></p>
+            <p id="statusMessage" class="text-center text-sm mt-2 font-medium min-h-[20px]"></p>
         </form>
     </div>
 
     <script>
-        // আপনার GAS Web App URL
+        // ⚠️ আপনার Google Apps Script Web App URL টি এখানে বসান
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwRYQM6RX-9PAwkFbhgUgpwan4RmDwTfaIyC0i-Q8MScOsUBPEbX1H7lsdJT68OI-eBxw/exec";
-        
+
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const cameraModal = document.getElementById('cameraModal');
@@ -81,34 +148,34 @@
         document.getElementById('openCameraBtn').addEventListener('click', async () => {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "environment" } // Rear camera preference
+                    video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }
                 });
                 video.srcObject = stream;
-                cameraModal.classList.remove('hidden');
+                cameraModal.classList.add('active');
             } catch (err) {
-                alert("Camera access denied or not available. Please use 'Gallery' button.");
-                console.error(err);
+                alert("Camera access denied. Please use the 'Gallery' button instead.");
+                console.error("Camera error:", err);
             }
         });
 
         // 2. Close Camera
         document.getElementById('closeCameraBtn').addEventListener('click', () => {
             if (stream) stream.getTracks().forEach(track => track.stop());
-            cameraModal.classList.add('hidden');
+            cameraModal.classList.remove('active');
         });
 
-        // 3. Capture Photo
+        // 3. Capture Photo (Compressed to 70% quality to avoid GAS payload limits)
         document.getElementById('captureBtn').addEventListener('click', () => {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-            capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.8); // Compress to 80%
+            capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
             
             imagePreview.src = capturedImageBase64;
             imagePreviewContainer.classList.remove('hidden');
             
             if (stream) stream.getTracks().forEach(track => track.stop());
-            cameraModal.classList.add('hidden');
+            cameraModal.classList.remove('active');
         });
 
         // 4. Retake Photo
@@ -118,11 +185,16 @@
             fileInput.value = "";
         });
 
-        // 5. Upload from Gallery (Fallback for mobile)
+        // 5. Upload from Gallery (Fallback)
         document.getElementById('uploadGalleryBtn').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert("File is too large. Please select an image under 5MB.");
+                    fileInput.value = "";
+                    return;
+                }
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     capturedImageBase64 = event.target.result;
@@ -140,42 +212,54 @@
             const statusMessage = document.getElementById('statusMessage');
             
             if (!capturedImageBase64) {
-                alert("Please capture or upload a site photo first.");
+                alert("Please capture or upload a site photo. It is mandatory.");
                 return;
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerText = "Submitting...";
-            statusMessage.innerText = "";
+            submitBtn.innerText = "Submitting... Please wait";
+            statusMessage.innerText = "Uploading data and photo...";
+            statusMessage.className = "text-center text-sm mt-2 font-medium text-blue-600";
 
+            // Payload matches exactly what your Code.gs submitComplaint() expects
             const formData = {
-                name: e.target.name.value,
-                phone: e.target.phone.value,
+                fullName: e.target.fullName.value,
+                mobile: e.target.mobile.value,
+                relation: e.target.relation.value,
+                guardianName: e.target.guardianName.value || "N/A",
+                gramPanchayat: e.target.gramPanchayat.value,
+                village: e.target.village.value,
+                category: e.target.category.value,
                 description: e.target.description.value,
-                imageBase64: capturedImageBase64,
-                timestamp: new Date().toISOString()
+                source: "Citizen Web Portal",
+                files: [{
+                    name: "site_evidence.jpg",
+                    mimeType: "image/jpeg",
+                    data: capturedImageBase64 
+                }]
             };
 
             try {
                 const response = await fetch(GAS_URL, {
                     method: "POST",
-                    body: JSON.stringify(formData) // Sending as JSON string
+                    body: JSON.stringify(formData)
                 });
                 
                 const result = await response.json();
-                if (result.result === "success") {
-                    statusMessage.innerText = "✅ Submitted Successfully!";
+                
+                if (result.success) {
+                    statusMessage.innerText = "✅ Submitted Successfully! ID: " + result.complaintId;
                     statusMessage.className = "text-center text-sm mt-2 font-medium text-green-600";
                     e.target.reset();
                     capturedImageBase64 = null;
                     imagePreviewContainer.classList.add('hidden');
                     fileInput.value = "";
                 } else {
-                    throw new Error(result.message || "Unknown error");
+                    throw new Error(result.error || result.message || "Unknown error");
                 }
             } catch (error) {
                 console.error("Submission error:", error);
-                statusMessage.innerText = "❌ Submission failed. Check console.";
+                statusMessage.innerText = "❌ Submission failed. Check internet connection.";
                 statusMessage.className = "text-center text-sm mt-2 font-medium text-red-600";
             } finally {
                 submitBtn.disabled = false;

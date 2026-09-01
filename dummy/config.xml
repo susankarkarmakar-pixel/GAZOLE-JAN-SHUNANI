@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="com.gazole.janshunani" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>Gazole Jan Shunani</name>
+    <description>
+        Public Grievance Hearing &amp; Redressal System
+    </description>
+    <author email="admin@gazole.gov.in" href="https://gazole.gov.in">
+        Gazole Administration
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-navigation href="*" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="LoadUrlTimeoutValue" value="70000" />
+    <preference name="AndroidPersistentFileLocation" value="Internal" />
+    <preference name="CacheData" value="true" />
+    <preference name="AppCacheEnabled" value="true" />
+
+    <platform name="android">
+        <icon src="res/icon/icon.png" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/screen.png" />
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+            <uses-feature android:name="android.hardware.camera" android:required="false" />
+        </config-file>
+    </platform>
+</widget>

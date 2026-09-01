@@ -8,17 +8,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
     :root { --primary: #E65100; --primary-light: #FF9800; --primary-subtle: #FFF3E0; --primary-dark: #BF360C; --secondary: #1E293B; --accent: #2563EB; --bg-main: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0; --text-primary: #0F172A; --text-secondary: #475569; --text-muted: #94A3B8; --success: #10B981; --warning: #F59E0B; --danger: #EF4444; --radius: 12px; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04); }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-main); color: var(--text-primary); line-height: 1.5; padding-bottom: 85px; min-height: 100vh; }
-    .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #ffffff; padding: 16px 20px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+    .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #ffffff; padding: 12px 20px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); transition: transform 0.3s ease-in-out; }
+    .header-hidden { transform: translateY(-100%); }
     .header-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
     .brand-wrapper { display: flex; align-items: center; gap: 12px; }
-    .gov-emblem { background: rgba(255, 255, 255, 0.2); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .brand-text h1 { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
-    .brand-text p { font-size: 12px; opacity: 0.9; font-weight: 500; }
+    .gov-emblem { background: rgba(255, 255, 255, 0.2); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .brand-text h1 { font-size: 15px; font-weight: 800; letter-spacing: 0.5px; }
+    .brand-text p { font-size: 10px; opacity: 0.9; font-weight: 500; }
     .header-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .app-main { max-width: 960px; margin: 20px auto; padding: 0 16px; }
     .tab-view { display: none; } .tab-view.active { display: block; animation: fadeIn 0.3s ease; }
@@ -107,21 +107,13 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="app-header">
     <div class="header-container">
       <div class="brand-wrapper">
         <div class="gov-emblem"><i class="fa-solid fa-landmark-dome"></i></div>
-        <div class="brand-text">
-          <h1>GAZOLE JAN SHUNANI</h1>
-          <p>Public Grievance Redressal Portal | Gazole Development Block</p>
-        </div>
+        <div class="brand-text"><h1>GAZOLE JAN SHUNANI</h1><p>Public Grievance Redressal Portal | Gazole Development Block</p></div>
       </div>
-      <div class="header-actions">
-        <button id="auth-status-btn" class="header-btn" onclick="openLoginModal()">
-          <i class="fa-solid fa-user-shield"></i> <span>Officer Login</span>
-        </button>
-      </div>
+      <div class="header-actions"><button id="auth-status-btn" class="header-btn" onclick="openLoginModal()"><i class="fa-solid fa-user-shield"></i> <span>Officer Login</span></button></div>
     </div>
   </header>
 
@@ -143,14 +135,18 @@
           <div class="form-section">
             <div class="section-title"><span class="step-num">2</span><h3>Location & Address</h3></div>
             <div class="form-grid">
-              <div class="form-group"><label for="gramPanchayat">Gram Panchayat <span class="required">*</span></label><select id="gramPanchayat" name="gramPanchayat" required><option value="">Select Gram Panchayat...</option></select></div>
-              <div class="form-group"><label for="village">Village / Para / Locality <span class="required">*</span></label><input type="text" id="village" name="village" placeholder="Enter village name or landmark" required></div>
+              <div class="form-group"><label for="gramPanchayat">Gram Panchayat <span class="required">*</span></label><select id="gramPanchayat" name="gramPanchayat" required onchange="handleGPChange()"><option value="">Select Gram Panchayat...</option></select></div>
+              <div class="form-group"><label for="village">Village <span class="required">*</span></label><select id="village" name="village" required onchange="handleVillageChange()"><option value="">Select GP first...</option></select></div>
+              <div class="form-group full-width" id="customVillageGroup" style="display:none;"><label for="customVillage">Enter Village Name <span class="required">*</span></label><input type="text" id="customVillage" name="customVillage" placeholder="Enter your village name"></div>
+              <div class="form-group"><label for="mouza">Mouza <span class="required">*</span></label><select id="mouza" name="mouza" required onchange="handleMouzaChange()"><option value="">Select GP first...</option></select></div>
+              <div class="form-group"><label for="jlNo">J.L. No. (Auto)</label><input type="text" id="jlNo" name="jlNo" readonly class="input-readonly" placeholder="Auto-filled"></div>
             </div>
           </div>
           <div class="form-section">
             <div class="section-title"><span class="step-num">3</span><h3>Grievance Information</h3></div>
             <div class="form-grid">
-              <div class="form-group full-width"><label for="category">Complaint Category <span class="required">*</span></label><select id="category" name="category" required><option value="">Select Category...</option></select></div>
+              <div class="form-group"><label for="category">Category <span class="required">*</span></label><select id="category" name="category" required onchange="handleCategoryChange()"><option value="">Select Category...</option></select></div>
+              <div class="form-group"><label for="subCategory">Sub-Category <span class="required">*</span></label><select id="subCategory" name="subCategory" required><option value="">Select Category first...</option></select></div>
               <div class="form-group full-width"><label for="description">Detailed Description <span class="required">*</span></label><textarea id="description" name="description" rows="4" placeholder="Describe the grievance in detail..." required></textarea></div>
             </div>
           </div>
@@ -166,27 +162,16 @@
               <div id="attachmentsPreview" class="attachments-grid"></div>
             </div>
           </div>
-          <div class="form-submit-wrapper">
-            <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg"><i class="fa-solid fa-paper-plane"></i> Submit Grievance</button>
-          </div>
+          <div class="form-submit-wrapper"><button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg"><i class="fa-solid fa-paper-plane"></i> Submit Grievance</button></div>
         </form>
       </div>
     </section>
 
-    <!-- TAB 2: TRACK STATUS -->
+    <!-- TAB 2: TRACK -->
     <section id="tab-track" class="tab-view">
       <div class="view-header"><h2>Track Grievance Status</h2><p>Search using your <strong>10-digit Mobile Number</strong>, <strong>Complainant Name</strong>, or <strong>Complaint ID</strong>.</p></div>
-      <div class="track-search-card">
-        <form onsubmit="handleTrackSearch(event)" class="search-form">
-          <div class="search-input-group" style="display:flex; gap:8px;">
-            <input type="text" id="trackInput" placeholder="Enter Mobile Number, Name, or ID..." required style="flex:1;">
-            <button type="submit" id="trackBtn" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-          </div>
-        </form>
-      </div>
-      <div id="trackResultContainer" class="track-results-wrapper">
-        <div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>Type your 10-digit Mobile Number, Citizen Name, or Complaint ID above to view live progress.</p></div>
-      </div>
+      <div class="track-search-card"><form onsubmit="handleTrackSearch(event)"><div style="display:flex; gap:8px;"><input type="text" id="trackInput" placeholder="Enter Mobile Number, Name, or ID..." required style="flex:1;"><button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button></div></form></div>
+      <div id="trackResultContainer"><div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>Type your 10-digit Mobile Number, Citizen Name, or Complaint ID above to view live progress.</p></div></div>
     </section>
 
     <!-- TAB 3: DASHBOARD -->
@@ -206,8 +191,8 @@
 
     <!-- TAB 4: PORTAL -->
     <section id="tab-portal" class="tab-view">
-      <div id="portalLoggedOut" class="portal-auth-card" style="text-align:center; padding:40px;">
-        <div class="auth-icon" style="font-size:48px; color:var(--primary); margin-bottom:16px;"><i class="fa-solid fa-user-lock"></i></div>
+      <div id="portalLoggedOut" style="text-align:center; padding:40px;">
+        <div style="font-size:48px; color:var(--primary); margin-bottom:16px;"><i class="fa-solid fa-user-lock"></i></div>
         <h2>Officer & Admin Portal</h2>
         <p style="margin:12px 0 24px; color:var(--text-secondary);">Access restricted to authorized block officers and administrative personnel.</p>
         <button class="btn btn-primary btn-lg" onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Sign In to Portal</button>
@@ -215,7 +200,7 @@
       <div id="portalLoggedIn" style="display: none;">
         <div class="portal-user-bar">
           <div class="user-info"><i class="fa-solid fa-circle-user" style="font-size:24px; color:var(--primary);"></i><div><strong id="loggedUserName">Officer Name</strong><br><span id="loggedUserRole" class="complaint-badge badge-assigned">Role</span> <span id="loggedUserDept" class="badge-dept">Department</span></div></div>
-          <div class="portal-bar-actions"><button class="btn btn-outline btn-sm" onclick="refreshOfficerComplaints()"><i class="fa-solid fa-rotate"></i> Refresh</button><button class="btn btn-danger btn-sm" onclick="handleLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
+          <div><button class="btn btn-outline btn-sm" onclick="refreshOfficerComplaints()"><i class="fa-solid fa-rotate"></i> Refresh</button> <button class="btn btn-danger btn-sm" onclick="handleLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
         </div>
         <div class="portal-nav-tabs">
           <button id="pTabBtnComplaints" class="portal-tab-btn active" onclick="switchPortalSubTab('complaints')"><i class="fa-solid fa-list-check"></i> Grievances Management</button>
@@ -225,73 +210,41 @@
           <div class="filter-card">
             <div class="filter-grid">
               <div class="filter-group"><label>Status</label><select id="filterStatus" onchange="applyPortalFilters()"><option value="All">All Statuses</option><option value="Pending">Pending</option><option value="Assigned">Assigned</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Closed">Closed</option></select></div>
+              <div class="filter-group"><label>Category</label><select id="filterCategory" onchange="applyPortalFilters()"><option value="All">All Categories</option></select></div>
               <div class="filter-group"><label>Gram Panchayat</label><select id="filterGP" onchange="applyPortalFilters()"><option value="All">All Gram Panchayats</option></select></div>
-              <div class="filter-group"><label>Department</label><select id="filterDepartment" onchange="applyPortalFilters()"><option value="All">All Departments</option></select></div>
               <div class="filter-group"><label>Search</label><input type="text" id="filterSearch" placeholder="Search ID, Name, Mobile..." oninput="applyPortalFilters()"></div>
             </div>
           </div>
           <div class="portal-table-card">
-            <div class="card-header" style="margin-bottom:12px;"><h3>Registered Grievances (<span id="portalFilteredCount">0</span>)</h3></div>
-            <div class="table-responsive">
-              <table class="data-table"><thead><tr><th>ID</th><th>Date</th><th>Complainant</th><th>GP & Village</th><th>Category & Issue</th><th>Assigned Dept / Officer</th><th>Status</th><th>Action</th></tr></thead><tbody id="portalComplaintsTableBody"><tr><td colspan="8" class="text-center">Loading complaints...</td></tr></tbody></table>
-            </div>
+            <div style="margin-bottom:12px;"><h3>Registered Grievances (<span id="portalFilteredCount">0</span>)</h3></div>
+            <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Date</th><th>Complainant</th><th>GP & Village</th><th>Category</th><th>Sub-Category</th><th>Status</th><th>Action</th></tr></thead><tbody id="portalComplaintsTableBody"><tr><td colspan="8" class="text-center">Loading complaints...</td></tr></tbody></table></div>
           </div>
         </div>
         <div id="portalSubTabOfficers" style="display: none;">
-          <div class="officers-mgmt-header"><div><h3>Registered Block Officers</h3><p>Create and assign officers to specific departments and Gram Panchayats.</p></div><button class="btn btn-primary" onclick="openCreateOfficerModal()"><i class="fa-solid fa-user-plus"></i> Add New Officer</button></div>
-          <div class="portal-table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>User ID</th><th>Officer Name</th><th>Mobile</th><th>Role</th><th>Department</th><th>Assigned GP</th><th>Status</th><th>Action</th></tr></thead><tbody id="officersTableBody"><tr><td colspan="8" class="text-center">Loading officers...</td></tr></tbody></table></div></div>
+          <div class="officers-mgmt-header"><div><h3>Registered Block Officers</h3><p>Create and assign officers to specific departments and categories.</p></div><button class="btn btn-primary" onclick="openCreateOfficerModal()"><i class="fa-solid fa-user-plus"></i> Add New Officer</button></div>
+          <div class="portal-table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>User ID</th><th>Officer Name</th><th>Mobile</th><th>Role</th><th>Department</th><th>Category</th><th>Sub-Category</th><th>Status</th><th>Action</th></tr></thead><tbody id="officersTableBody"><tr><td colspan="9" class="text-center">Loading officers...</td></tr></tbody></table></div></div>
         </div>
       </div>
     </section>
 
-    <!-- SUCCESS PAGE (নতুন যোগ করা হয়েছে) -->
+    <!-- SUCCESS PAGE -->
     <section id="successPage" style="display: none; padding: 20px; text-align: center;">
       <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-        <div style="width: 80px; height: 80px; background: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-          <i class="fa-solid fa-check" style="font-size: 40px; color: white;"></i>
-        </div>
+        <div style="width: 80px; height: 80px; background: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;"><i class="fa-solid fa-check" style="font-size: 40px; color: white;"></i></div>
         <h2 style="color: var(--secondary); margin-bottom: 8px; font-size: 24px;">Grievance Submitted!</h2>
         <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 14px;">অভিযোগ সফলভাবে জমা দেওয়া হয়েছে</p>
-        
         <div style="background: var(--bg-main); border: 2px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
-            YOUR COMPLAINT ID / আপনার অভিযোগ আইডি
-          </p>
-          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-            <h3 id="successComplaintId" style="font-size: 24px; color: var(--primary); font-weight: 800; letter-spacing: 1px; word-break: break-all;">GJS-2023-89021</h3>
-            <button onclick="copyComplaintId()" style="background: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text-secondary);">
-              <i class="fa-regular fa-copy"></i>
-            </button>
-          </div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">YOUR COMPLAINT ID / আপনার অভিযোগ আইডি</p>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;"><h3 id="successComplaintId" style="font-size: 24px; color: var(--primary); font-weight: 800; letter-spacing: 1px; word-break: break-all;">GJS-2023-89021</h3><button onclick="copyComplaintId()" style="background: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text-secondary);"><i class="fa-regular fa-copy"></i></button></div>
         </div>
-        
-        <div style="background: #EFF6FF; border-left: 4px solid var(--accent); padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: left;">
-          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-            <i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>
-            Please save this ID. You can track your grievance status using this ID from the My Grievances section.
-            <br><br>
-            অনুগ্রহ করে এই আইডি সংরক্ষণ করুন। আপনি আমার অভিযোগ বিভাগ থেকে এই আইডি ব্যবহার করে আপনার অভিযোগের অবস্থা ট্র্যাক করতে পারবেন।
-          </p>
-        </div>
-        
-        <button onclick="downloadAcknowledgement()" class="btn btn-outline btn-block" style="margin-bottom: 12px; padding: 14px;">
-          <i class="fa-solid fa-download"></i> DOWNLOAD ACKNOWLEDGEMENT
-          <br><small style="font-size: 11px; opacity: 0.8;">স্বীকৃতির ডাউনলোড কপন</small>
-        </button>
-        
-        <button onclick="submitAnotherComplaint()" class="btn btn-primary btn-block btn-lg" style="margin-bottom: 12px;">
-          SUBMIT ANOTHER COMPLAINT
-          <br><small style="font-size: 13px;">আরেকটি অভিযোগের জন্য ক্লিক করুন</small>
-        </button>
-        
-        <button onclick="returnToHome()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 8px;">
-          Return to Home / মূল পাতায় ফিরে যান
-        </button>
+        <div style="background: #EFF6FF; border-left: 4px solid var(--accent); padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: left;"><p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;"><i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>Please save this ID. You can track your grievance status using this ID.<br><br>অনুগ্রহ করে এই আইডি সংরক্ষণ করুন। আপনি এই আইডি ব্যবহার করে আপনার অভিযোগের অবস্থা ট্র্যাক করতে পারবেন।</p></div>
+        <button onclick="downloadAcknowledgement()" class="btn btn-outline btn-block" style="margin-bottom: 12px; padding: 14px;"><i class="fa-solid fa-download"></i> DOWNLOAD ACKNOWLEDGEMENT</button>
+        <button onclick="submitAnotherComplaint()" class="btn btn-primary btn-block btn-lg" style="margin-bottom: 12px;">SUBMIT ANOTHER COMPLAINT</button>
+        <button onclick="returnToHome()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 8px;">Return to Home / মূল পাতায় ফিরে যান</button>
       </div>
     </section>
   </main>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('new')"><i class="fa-solid fa-pen-to-square"></i><span>New Entry</span></button>
     <button class="nav-item" onclick="switchTab('track')"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Track</span></button>
@@ -301,33 +254,21 @@
 
   <!-- Modals -->
   <div id="dashboardExplorerModal" class="app-modal"><div class="modal-dialog modal-lg"><div class="modal-header"><h3 id="explorerModalTitle"><i class="fa-solid fa-folder-open"></i> Grievance Records</h3><button type="button" class="modal-close" onclick="closeDashboardExplorer()">&times;</button></div><div class="modal-body" style="max-height: 75vh; overflow-y: auto;"><div id="explorerComplaintsContainer" class="dashboard-filtered-grid"></div></div></div></div>
-  
-  <div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body text-center"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p class="camera-tip" style="margin:12px 0; color:var(--text-muted);">Camera opens inside the app &mdash; your form remains intact.</p><button type="button" class="btn-capture" onclick="takeSnapshot()"><i class="fa-solid fa-camera-retro"></i></button></div></div></div>
-
+  <div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body text-center"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p style="margin:12px 0; color:var(--text-muted);">Camera opens inside the app — your form remains intact.</p><button type="button" class="btn-capture" onclick="takeSnapshot()"><i class="fa-solid fa-camera-retro"></i></button></div></div></div>
   <div id="loginModal" class="app-modal"><div class="modal-dialog modal-sm"><div class="modal-header"><h3><i class="fa-solid fa-shield-halved"></i> Sign In to Portal</h3><button type="button" class="modal-close" onclick="closeLoginModal()">&times;</button></div><div class="modal-body"><div class="login-tabs"><button type="button" id="tabBtnOfficer" class="login-tab-btn active" onclick="switchLoginMode('officer')">Officer Login</button><button type="button" id="tabBtnAdmin" class="login-tab-btn" onclick="switchLoginMode('admin')">Admin Login</button></div><form id="officerLoginForm" onsubmit="handleOfficerLogin(event)"><div class="form-group"><label for="loginMobile">Mobile Number</label><input type="tel" id="loginMobile" maxlength="10" placeholder="10-digit registered mobile" required></div><div class="form-group"><label for="loginPin">Security PIN</label><input type="password" id="loginPin" maxlength="6" placeholder="Enter PIN" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Officer</button></form><form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display: none;"><div class="form-group"><label for="adminPassword">Master Password</label><input type="password" id="adminPassword" placeholder="Enter BDO admin password" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Admin</button></form></div></div></div>
-
   <div id="actionModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-clipboard-check"></i> Action & Officer Assignment</h3><button type="button" class="modal-close" onclick="closeActionModal()">&times;</button></div><div class="modal-body"><form id="actionUpdateForm" onsubmit="handleActionUpdateSubmit(event)"><input type="hidden" id="actionComplaintId"><div class="form-group"><label>Complaint ID</label><input type="text" id="actionDisplayId" readonly class="input-readonly"></div><div class="form-grid"><div class="form-group"><label for="updateStatusSelect">Update Status <span class="required">*</span></label><select id="updateStatusSelect" required><option value="Pending">Pending</option><option value="Assigned">Assigned</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Closed">Closed</option></select></div><div class="form-group"><label for="assignDepartmentSelect">Tag Department</label><select id="assignDepartmentSelect"><option value="">Select Department...</option></select></div></div><div class="form-group"><label for="assignOfficerSelect">Assign Officer</label><select id="assignOfficerSelect"><option value="">Select Officer...</option></select></div><div class="form-group"><label for="updateActionTaken">Action Taken Description</label><textarea id="updateActionTaken" rows="3" placeholder="Enter field inquiry details or resolution..."></textarea></div><div class="form-group"><label for="updateRemarks">Official Remarks</label><input type="text" id="updateRemarks" placeholder="Optional notes"></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Save Status & Tagging</button></form></div></div></div>
-
-  <div id="createOfficerModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-user-plus"></i> Register New Officer</h3><button type="button" class="modal-close" onclick="closeCreateOfficerModal()">&times;</button></div><div class="modal-body"><form id="createOfficerForm" onsubmit="handleCreateOfficerSubmit(event)"><div class="form-group"><label for="newOfficerName">Officer Full Name <span class="required">*</span></label><input type="text" id="newOfficerName" required></div><div class="form-grid"><div class="form-group"><label for="newOfficerMobile">Mobile (Login ID) <span class="required">*</span></label><input type="tel" id="newOfficerMobile" maxlength="10" required pattern="[0-9]{10}"></div><div class="form-group"><label for="newOfficerPin">Security PIN <span class="required">*</span></label><input type="password" id="newOfficerPin" maxlength="6" required></div></div><div class="form-grid"><div class="form-group"><label for="newOfficerRole">Officer Role</label><select id="newOfficerRole"><option value="Officer">Officer</option><option value="Nirman Sahayak">Nirman Sahayak</option><option value="GP Secretary">GP Secretary</option><option value="Executive Assistant">Executive Assistant</option><option value="Supervisor">Supervisor</option><option value="Admin">Admin</option></select></div><div class="form-group"><label for="newOfficerGP">Assigned GP</label><select id="newOfficerGP"><option value="All">All Gram Panchayats</option></select></div></div><div class="form-group"><label for="newOfficerDept">Tagged Department <span class="required">*</span></label><select id="newOfficerDept" required><option value="">Select Department...</option></select></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Create Officer Account</button></form></div></div></div>
-
+  <div id="createOfficerModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-user-plus"></i> Register New Officer</h3><button type="button" class="modal-close" onclick="closeCreateOfficerModal()">&times;</button></div><div class="modal-body"><form id="createOfficerForm" onsubmit="handleCreateOfficerSubmit(event)"><div class="form-group"><label for="newOfficerName">Officer Full Name <span class="required">*</span></label><input type="text" id="newOfficerName" required></div><div class="form-grid"><div class="form-group"><label for="newOfficerMobile">Mobile (Login ID) <span class="required">*</span></label><input type="tel" id="newOfficerMobile" maxlength="10" required pattern="[0-9]{10}"></div><div class="form-group"><label for="newOfficerPin">Security PIN <span class="required">*</span></label><input type="password" id="newOfficerPin" maxlength="6" required></div></div><div class="form-grid"><div class="form-group"><label for="newOfficerRole">Officer Role</label><select id="newOfficerRole"><option value="Officer">Officer</option><option value="Nirman Sahayak">Nirman Sahayak</option><option value="GP Secretary">GP Secretary</option><option value="Executive Assistant">Executive Assistant</option><option value="Supervisor">Supervisor</option><option value="Admin">Admin</option></select></div><div class="form-group"><label for="newOfficerGP">Assigned GP</label><select id="newOfficerGP"><option value="All">All Gram Panchayats</option></select></div></div><div class="form-group"><label for="newOfficerDept">Tagged Department <span class="required">*</span></label><select id="newOfficerDept" required><option value="">Select Department...</option></select></div><div class="form-group"><label for="newOfficerCategory">Tagged Category</label><select id="newOfficerCategory"><option value="All">All Categories</option></select></div><div class="form-group"><label for="newOfficerSubCategory">Tagged Sub-Category</label><select id="newOfficerSubCategory"><option value="All">All Sub-Categories</option></select></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Create Officer Account</button></form></div></div></div>
   <div id="appToast" class="app-toast"></div>
   <div id="loadingOverlay" class="loading-overlay" style="display: none;"><div class="spinner-box"><div class="app-spinner"></div><p id="loadingMessage">Loading...</p></div></div>
 
   <script>
-    // ⚠️ আপনার Google Apps Script Web App URL টি এখানে বসান
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzMs9UeIxbhCaLwDzXNumd7R2mz2tfqxXHubnHDq7QXuJ6PELFYyNZC4WbBsNaCfPd6yQ/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxF3jXw9gfO0EoU01-ntEsOyhVe7S9r8ct9jPYWRSHWXjCm8ESSnCKdfH3mdWDXVaxkrg/exec";
+    let appState = { currentTab: 'new', portalSubTab: 'complaints', selectedFiles: [], mediaStream: null, currentUser: null, cachedComplaints: [], cachedOfficers: [], categories: {}, gpList: [], departments: [], villages: [], mouzas: [] };
 
-    let appState = { currentTab: 'new', portalSubTab: 'complaints', selectedFiles: [], mediaStream: null, currentUser: null, cachedComplaints: [], cachedOfficers: [], categories: [], gpList: [], departments: [] };
-
-    // Universal Fetch Helper
     async function callGAS(action, payload = {}, showLoaderFlag = true) {
       if (showLoaderFlag) showLoader('Processing...');
       try {
-        const response = await fetch(GAS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: action, ...payload })
-        });
+        const response = await fetch(GAS_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: action, ...payload }) });
         const result = await response.json();
         if (showLoaderFlag) hideLoader();
         return result;
@@ -339,19 +280,16 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', function() { initAppMetadata(); checkSavedSession(); });
+    document.addEventListener('DOMContentLoaded', function() { initAppMetadata(); checkSavedSession(); initAutoHideHeader(); });
 
     async function initAppMetadata() {
       showLoader('Initializing Gazole Portal...');
       const gpRes = await callGAS('getGPList', {}, false);
       if (gpRes.success) { appState.gpList = gpRes.data; populateGPSelects(gpRes.data); }
-      
       const catRes = await callGAS('getCategories', {}, false);
       if (catRes.success) { appState.categories = catRes.data; populateCategorySelects(catRes.data); }
-      
       const deptRes = await callGAS('getDepartments', {}, false);
       if (deptRes.success) { appState.departments = deptRes.data; populateDepartmentSelects(deptRes.data); }
-      
       hideLoader();
       loadDashboardStats();
       fetchAllComplaintsToCache();
@@ -369,14 +307,82 @@
       });
     }
     function populateCategorySelects(cats) {
-      const el = document.getElementById('category');
-      if(el) cats.forEach(c => el.add(new Option(c, c)));
+      const catSelect = document.getElementById('category');
+      const filterCat = document.getElementById('filterCategory');
+      const officerCat = document.getElementById('newOfficerCategory');
+      if (catSelect) { Object.keys(cats).forEach(c => catSelect.add(new Option(c, c))); }
+      if (filterCat) { Object.keys(cats).forEach(c => filterCat.add(new Option(c, c))); }
+      if (officerCat) { Object.keys(cats).forEach(c => officerCat.add(new Option(c, c))); }
     }
     function populateDepartmentSelects(depts) {
       ['filterDepartment', 'assignDepartmentSelect', 'newOfficerDept'].forEach(id => {
         const el = document.getElementById(id);
         if(el) depts.forEach(d => el.add(new Option(d, d)));
       });
+    }
+
+    // Cascading Dropdown Handlers
+    async function handleGPChange() {
+      const gp = document.getElementById('gramPanchayat').value;
+      const villageSelect = document.getElementById('village');
+      const mouzaSelect = document.getElementById('mouza');
+      const customVillageGroup = document.getElementById('customVillageGroup');
+      
+      villageSelect.innerHTML = '<option value="">Loading villages...</option>';
+      mouzaSelect.innerHTML = '<option value="">Loading mouzas...</option>';
+      document.getElementById('jlNo').value = '';
+      customVillageGroup.style.display = 'none';
+      
+      if (!gp) return;
+      
+      const [villageRes, mouzaRes] = await Promise.all([
+        callGAS('getVillagesByGP', { gpName: gp }, false),
+        callGAS('getMouzasByGP', { gpName: gp }, false)
+      ]);
+      
+      villageSelect.innerHTML = '<option value="">Select Village...</option><option value="Other">Other (Not in list)</option>';
+      if (villageRes.success) {
+        villageRes.data.forEach(v => villageSelect.add(new Option(v, v)));
+      }
+      
+      mouzaSelect.innerHTML = '<option value="">Select Mouza...</option>';
+      if (mouzaRes.success) {
+        appState.mouzas = mouzaRes.data;
+        mouzaRes.data.forEach(m => mouzaSelect.add(new Option(m.name, m.name)));
+      }
+    }
+
+    function handleVillageChange() {
+      const village = document.getElementById('village').value;
+      const customVillageGroup = document.getElementById('customVillageGroup');
+      if (village === 'Other') {
+        customVillageGroup.style.display = 'block';
+        document.getElementById('customVillage').required = true;
+      } else {
+        customVillageGroup.style.display = 'none';
+        document.getElementById('customVillage').required = false;
+      }
+    }
+
+    async function handleMouzaChange() {
+      const mouzaName = document.getElementById('mouza').value;
+      const jlNoInput = document.getElementById('jlNo');
+      if (mouzaName && appState.mouzas.length > 0) {
+        const mouza = appState.mouzas.find(m => m.name === mouzaName);
+        if (mouza) jlNoInput.value = mouza.jlNo || '';
+      } else {
+        jlNoInput.value = '';
+      }
+    }
+
+    function handleCategoryChange() {
+      const category = document.getElementById('category').value;
+      const subCatSelect = document.getElementById('subCategory');
+      subCatSelect.innerHTML = '<option value="">Select Sub-Category...</option>';
+      if (category && appState.categories[category]) {
+        const subCats = appState.categories[category].subCategories || [];
+        subCats.forEach(sc => subCatSelect.add(new Option(sc, sc)));
+      }
     }
 
     function switchTab(tabId) {
@@ -414,7 +420,7 @@
       let html = `<p style="margin-bottom:12px; font-weight:700; color:var(--text-secondary);">Found ${res.data.length} Grievance Record(s):</p>`;
       res.data.forEach(c => {
         const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
-        html += `<div class="complaint-result-card"><div class="result-header"><div><h3 style="color:var(--primary); font-weight:800;">${c.ComplaintID}</h3><small style="color:var(--text-secondary);">${c.Date} at ${c.Time}</small></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><div style="margin-bottom:12px;"><p><strong>Complainant:</strong> ${c.FullName} (${c.Relation || 'S/O'} ${c.GuardianName || 'N/A'})</p><p><strong>Mobile Number:</strong> ${c.Mobile}</p><p><strong>Location:</strong> Vill. ${c.Village}, GP: ${c.GramPanchayat}</p><p><strong>Category:</strong> ${c.Category}</p><p style="margin-top:6px; background:var(--bg-main); padding:8px 12px; border-radius:6px;"><strong>Issue:</strong> ${c.Description}</p></div><div class="timeline-step"><strong>Current Status: ${c.Status}</strong>${c.AssignedDepartment ? `<p style="font-size:13px; color:var(--primary); font-weight:600;">Tagged Dept: ${c.AssignedDepartment}</p>` : ''}${c.AssignedOfficer ? `<p style="font-size:13px; color:var(--secondary); font-weight:600;">Assigned Officer: ${c.AssignedOfficer}</p>` : ''}<p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${c.ActionTaken ? 'Action Taken: ' + c.ActionTaken : 'Pending administrative action.'}</p>${c.Remarks ? `<p style="font-size:12px; color:var(--text-muted);">Remarks: ${c.Remarks}</p>` : ''}</div>${c.EvidenceURLs ? `<div style="margin-top:12px;"><a href="${c.EvidenceURLs.split(',')[0]}" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-image"></i> View Site Photo / Document</a></div>` : ''}</div>`;
+        html += `<div class="complaint-result-card"><div class="result-header"><div><h3 style="color:var(--primary); font-weight:800;">${c.ComplaintID}</h3><small style="color:var(--text-secondary);">${c.Date} at ${c.Time}</small></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><div style="margin-bottom:12px;"><p><strong>Complainant:</strong> ${c.FullName} (${c.Relation || 'S/O'} ${c.GuardianName || 'N/A'})</p><p><strong>Mobile:</strong> ${c.Mobile}</p><p><strong>Location:</strong> Vill. ${c.Village}, GP: ${c.GramPanchayat}</p>${c.Mouza ? `<p><strong>Mouza:</strong> ${c.Mouza} (JL: ${c.JLNo || 'N/A'})</p>` : ''}<p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="margin-top:6px; background:var(--bg-main); padding:8px 12px; border-radius:6px;"><strong>Issue:</strong> ${c.Description}</p></div><div class="timeline-step"><strong>Current Status: ${c.Status}</strong>${c.AssignedDepartment ? `<p style="font-size:13px; color:var(--primary); font-weight:600;">Tagged Dept: ${c.AssignedDepartment}</p>` : ''}${c.AssignedOfficer ? `<p style="font-size:13px; color:var(--secondary); font-weight:600;">Assigned Officer: ${c.AssignedOfficer}</p>` : ''}<p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${c.ActionTaken ? 'Action Taken: ' + c.ActionTaken : 'Pending administrative action.'}</p>${c.Remarks ? `<p style="font-size:12px; color:var(--text-muted);">Remarks: ${c.Remarks}</p>` : ''}</div>${c.EvidenceURLs ? `<div style="margin-top:12px;"><a href="${c.EvidenceURLs.split(',')[0]}" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-image"></i> View Site Photo</a></div>` : ''}</div>`;
       });
       container.innerHTML = html;
     }
@@ -449,7 +455,7 @@
         let html = '';
         res.data.forEach(c => {
           const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
-          html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
+          html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
         });
         container.innerHTML = html;
       }
@@ -458,7 +464,6 @@
     }
     function closeDashboardExplorer() { document.getElementById('dashboardExplorerModal').style.display = 'none'; }
 
-    // Camera & File Upload
     function openCameraModal() {
       const modal = document.getElementById('cameraModal'); modal.style.display = 'flex';
       const video = document.getElementById('cameraVideo');
@@ -502,9 +507,10 @@
     }
     function removeAttachment(idx) { appState.selectedFiles.splice(idx, 1); renderAttachments(); }
 
-    // Form Submission with Success Page
     async function handleComplaintSubmit(e) {
       e.preventDefault();
+      const villageSelect = document.getElementById('village');
+      const villageValue = villageSelect.value === 'Other' ? document.getElementById('customVillage').value.trim() : villageSelect.value;
       
       const formData = {
         fullName: document.getElementById('fullName').value.trim(),
@@ -512,29 +518,22 @@
         relation: document.getElementById('relation').value,
         guardianName: document.getElementById('guardianName').value.trim(),
         gramPanchayat: document.getElementById('gramPanchayat').value,
-        village: document.getElementById('village').value.trim(),
+        village: villageValue,
+        mouza: document.getElementById('mouza').value,
+        jlNo: document.getElementById('jlNo').value,
         category: document.getElementById('category').value,
+        subCategory: document.getElementById('subCategory').value,
         description: document.getElementById('description').value.trim(),
         files: appState.selectedFiles,
         source: 'Citizen Web Portal'
       };
       
-      if (formData.mobile.length !== 10) {
-        showToast('Please enter a valid 10-digit mobile number.');
-        return;
-      }
-      
+      if (formData.mobile.length !== 10) { showToast('Please enter a valid 10-digit mobile number.'); return; }
       const res = await callGAS('submitComplaint', { formData: formData });
-      
-      if (res.success) {
-        // Show beautiful success page
-        showSuccessPage(res.complaintId);
-      } else {
-        alert('Error: ' + (res.error || 'Submission failed'));
-      }
+      if (res.success) { showSuccessPage(res.complaintId); }
+      else { alert('Error: ' + (res.error || 'Submission failed')); }
     }
 
-    // Success Page Functions
     function showSuccessPage(complaintId) {
       document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
       document.querySelector('.bottom-nav').style.display = 'none';
@@ -543,82 +542,41 @@
       sessionStorage.setItem('currentComplaintId', complaintId);
       window.scrollTo(0, 0);
     }
-
     function hideSuccessPage() {
       document.querySelectorAll('.tab-view').forEach(t => t.style.display = '');
       document.querySelector('.bottom-nav').style.display = 'flex';
       document.getElementById('successPage').style.display = 'none';
       switchTab('new');
     }
-
     function copyComplaintId() {
       const id = document.getElementById('successComplaintId').innerText;
-      navigator.clipboard.writeText(id).then(() => {
-        showToast('Complaint ID copied!');
-      });
+      navigator.clipboard.writeText(id).then(() => showToast('Complaint ID copied!'));
     }
-
     function submitAnotherComplaint() {
       document.getElementById('complaintForm').reset();
       appState.selectedFiles = [];
       renderAttachments();
       hideSuccessPage();
     }
-
-    function returnToHome() {
-      hideSuccessPage();
-    }
+    function returnToHome() { hideSuccessPage(); }
 
     async function downloadAcknowledgement() {
       const complaintId = sessionStorage.getItem('currentComplaintId');
       if (!complaintId) { showToast('Complaint ID not found'); return; }
-      
       showLoader('Generating acknowledgement...');
       const res = await callGAS('trackComplaint', { query: complaintId }, false);
       hideLoader();
-      
-      if (!res.success || !res.data || res.data.length === 0) {
-        showToast('Could not fetch complaint details');
-        return;
-      }
-      
+      if (!res.success || !res.data || res.data.length === 0) { showToast('Could not fetch complaint details'); return; }
       const c = res.data[0];
-      const content = `GAZOLE JAN SHUNANI - GRIEVANCE ACKNOWLEDGEMENT
-===============================================
-
-Complaint ID: ${c.ComplaintID}
-Date: ${c.Date} ${c.Time}
-
-COMPLAINANT DETAILS:
-Name: ${c.FullName}
-Mobile: ${c.Mobile}
-Guardian: ${c.GuardianName} (${c.Relation})
-
-LOCATION:
-Gram Panchayat: ${c.GramPanchayat}
-Village: ${c.Village}
-
-GRIEVANCE DETAILS:
-Category: ${c.Category}
-Description: ${c.Description}
-
-STATUS: ${c.Status}
-
-This is a computer-generated acknowledgement.
-For queries, contact: BDO Office, Gazole Block
-===============================================`;
-      
+      const content = `GAZOLE JAN SHUNANI - GRIEVANCE ACKNOWLEDGEMENT\n===============================================\n\nComplaint ID: ${c.ComplaintID}\nDate: ${c.Date} ${c.Time}\n\nCOMPLAINANT DETAILS:\nName: ${c.FullName}\nMobile: ${c.Mobile}\nGuardian: ${c.GuardianName} (${c.Relation})\n\nLOCATION:\nGram Panchayat: ${c.GramPanchayat}\nVillage: ${c.Village}\nMouza: ${c.Mouza || 'N/A'}\nJ.L. No.: ${c.JLNo || 'N/A'}\n\nGRIEVANCE DETAILS:\nCategory: ${c.Category}\nSub-Category: ${c.SubCategory || 'N/A'}\nDescription: ${c.Description}\n\nSTATUS: ${c.Status}\n\nThis is a computer-generated acknowledgement.\nFor queries, contact: BDO Office, Gazole Block\n===============================================`;
       const blob = new Blob([content], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = `Acknowledgement_${complaintId}.txt`;
-      a.click();
+      a.href = url; a.download = `Acknowledgement_${complaintId}.txt`; a.click();
       window.URL.revokeObjectURL(url);
       showToast('Acknowledgement downloaded!');
     }
 
-    // Portal & Auth
     function openLoginModal() { if (appState.currentUser) { switchTab('portal'); return; } document.getElementById('loginModal').style.display = 'flex'; }
     function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
     function switchLoginMode(mode) {
@@ -661,20 +619,20 @@ For queries, contact: BDO Office, Gazole Block
       switchTab('new'); showToast('Logged out successfully.');
     }
     async function refreshOfficerComplaints() {
-      const res = await callGAS('getAllComplaints', {});
+      const res = await callGAS('getAllComplaints', { officerUser: appState.currentUser });
       if (res.success) { appState.cachedComplaints = res.data; applyPortalFilters(); }
     }
     function applyPortalFilters() {
       const status = document.getElementById('filterStatus').value;
+      const category = document.getElementById('filterCategory').value;
       const gp = document.getElementById('filterGP').value;
-      const dept = document.getElementById('filterDepartment').value;
       const search = document.getElementById('filterSearch').value.toLowerCase().trim();
       const filtered = appState.cachedComplaints.filter(c => {
         if (status !== 'All' && String(c.Status).toLowerCase() !== status.toLowerCase()) return false;
+        if (category !== 'All' && String(c.Category).toLowerCase() !== category.toLowerCase()) return false;
         if (gp !== 'All' && String(c.GramPanchayat).toLowerCase() !== gp.toLowerCase()) return false;
-        if (dept !== 'All' && String(c.AssignedDepartment).toLowerCase() !== dept.toLowerCase()) return false;
         if (search) {
-          const str = [c.ComplaintID, c.FullName, c.Mobile, c.Village, c.Description, c.AssignedOfficer, c.AssignedDepartment].join(' ').toLowerCase();
+          const str = [c.ComplaintID, c.FullName, c.Mobile, c.Village, c.Description, c.Category, c.SubCategory].join(' ').toLowerCase();
           if (!str.includes(search)) return false;
         }
         return true;
@@ -688,7 +646,7 @@ For queries, contact: BDO Office, Gazole Block
       let html = '';
       complaints.forEach(c => {
         const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
-        html += `<tr><td><strong>${c.ComplaintID}</strong></td><td>${c.Date}</td><td>${c.FullName}<br><small style="color:var(--text-muted);">${c.Mobile}</small></td><td>${c.GramPanchayat}<br><small>${c.Village}</small></td><td><strong>${c.Category}</strong><br><small style="color:var(--text-muted);">${(c.Description || '').substring(0, 30)}...</small></td><td>${c.AssignedDepartment ? `<span class="badge-dept">${c.AssignedDepartment}</span><br>` : ''}<small style="font-weight:600; color:var(--text-secondary);">${c.AssignedOfficer || 'Unassigned'}</small></td><td><span class="complaint-badge ${statusClass}">${c.Status}</span></td><td><button class="btn btn-primary btn-sm" onclick="openActionModal('${c.ComplaintID}', '${c.Status}', '${c.AssignedDepartment || ''}', '${c.AssignedOfficer || ''}')"><i class="fa-solid fa-pen-to-square"></i> Action</button></td></tr>`;
+        html += `<tr><td><strong>${c.ComplaintID}</strong></td><td>${c.Date}</td><td>${c.FullName}<br><small style="color:var(--text-muted);">${c.Mobile}</small></td><td>${c.GramPanchayat}<br><small>${c.Village}</small></td><td><strong>${c.Category}</strong></td><td>${c.SubCategory || '-'}</td><td><span class="complaint-badge ${statusClass}">${c.Status}</span></td><td><button class="btn btn-primary btn-sm" onclick="openActionModal('${c.ComplaintID}', '${c.Status}', '${c.AssignedDepartment || ''}', '${c.AssignedOfficer || ''}')"><i class="fa-solid fa-pen-to-square"></i> Action</button></td></tr>`;
       });
       tbody.innerHTML = html;
     }
@@ -731,11 +689,11 @@ For queries, contact: BDO Office, Gazole Block
       if (!res.success) return;
       appState.cachedOfficers = res.data;
       const tbody = document.getElementById('officersTableBody');
-      if (res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="text-center">No officers registered.</td></tr>'; return; }
+      if (res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center">No officers registered.</td></tr>'; return; }
       let html = '';
       res.data.forEach(o => {
         const isActive = (String(o.Status).toLowerCase() === 'active');
-        html += `<tr><td><strong>${o.UserID}</strong></td><td>${o.Name}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${o.Department}</span></td><td>${o.GPAssigned}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
+        html += `<tr><td><strong>${o.UserID}</strong></td><td>${o.Name}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${o.Department}</span></td><td>${o.Category || 'All'}</td><td>${o.SubCategory || 'All'}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
       });
       tbody.innerHTML = html;
     }
@@ -746,7 +704,8 @@ For queries, contact: BDO Office, Gazole Block
       const officerData = {
         name: document.getElementById('newOfficerName').value.trim(), mobile: document.getElementById('newOfficerMobile').value.trim(),
         pin: document.getElementById('newOfficerPin').value.trim(), role: document.getElementById('newOfficerRole').value,
-        gpAssigned: document.getElementById('newOfficerGP').value, department: document.getElementById('newOfficerDept').value
+        gpAssigned: document.getElementById('newOfficerGP').value, department: document.getElementById('newOfficerDept').value,
+        category: document.getElementById('newOfficerCategory').value, subCategory: document.getElementById('newOfficerSubCategory').value
       };
       const res = await callGAS('createOfficer', { officerData: officerData, createdBy: appState.currentUser ? appState.currentUser.name : 'Admin' });
       if (res.success) { document.getElementById('createOfficerForm').reset(); closeCreateOfficerModal(); alert(res.message); loadOfficersTable(); loadOfficersListForAssign(); } else { alert('Error: ' + res.error); }
@@ -756,7 +715,22 @@ For queries, contact: BDO Office, Gazole Block
       showToast(res.message); loadOfficersTable(); loadOfficersListForAssign();
     }
 
-    // UI Helpers
+    // Auto-hide header on scroll
+    function initAutoHideHeader() {
+      let lastScrollTop = 0;
+      const header = document.querySelector('.app-header');
+      const scrollThreshold = 50;
+      window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+          header.classList.add('header-hidden');
+        } else {
+          header.classList.remove('header-hidden');
+        }
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      }, { passive: true });
+    }
+
     function showLoader(msg) { document.getElementById('loadingMessage').innerText = msg || 'Loading...'; document.getElementById('loadingOverlay').style.display = 'flex'; }
     function hideLoader() { document.getElementById('loadingOverlay').style.display = 'none'; }
     function showToast(msg) { const toast = document.getElementById('appToast'); toast.innerText = msg; toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3500); }

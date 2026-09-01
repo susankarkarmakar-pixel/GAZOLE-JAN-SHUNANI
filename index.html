@@ -262,7 +262,12 @@
   <div id="loadingOverlay" class="loading-overlay" style="display: none;"><div class="spinner-box"><div class="app-spinner"></div><p id="loadingMessage">Loading...</p></div></div>
 
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxF3jXw9gfO0EoU01-ntEsOyhVe7S9r8ct9jPYWRSHWXjCm8ESSnCKdfH3mdWDXVaxkrg/exec";
+    // ⚠️ আপনার Google Apps Script Web App URL টি এখানে বসান
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxmA6t834zWiMyow0YEMqf2WmGUlmGMbYTBzVYYSp3_Wngr8upRVoPKLMSAd64-bSx6sg/exec";
+
+    // Sheet-এর exact spelling অনুযায়ী GP List
+    const GP_LIST = ['ALAL', 'BABUPUR', 'BAIRGACHHI-I', 'BAIRGACHHI-II', 'CHAKNAGAR', 'DEOTALA', 'GAZOLE-I', 'GAZOLE-II', 'KARKACH', 'MAJHRA', 'PANDUA', 'RANIGANJ-I', 'RANIGANJ-II', 'SAHAJADPUR', 'SALAIDANGA'];
+
     let appState = { currentTab: 'new', portalSubTab: 'complaints', selectedFiles: [], mediaStream: null, currentUser: null, cachedComplaints: [], cachedOfficers: [], categories: {}, gpList: [], departments: [], villages: [], mouzas: [] };
 
     async function callGAS(action, payload = {}, showLoaderFlag = true) {
@@ -284,8 +289,8 @@
 
     async function initAppMetadata() {
       showLoader('Initializing Gazole Portal...');
-      const gpRes = await callGAS('getGPList', {}, false);
-      if (gpRes.success) { appState.gpList = gpRes.data; populateGPSelects(gpRes.data); }
+      appState.gpList = GP_LIST;
+      populateGPSelects(GP_LIST);
       const catRes = await callGAS('getCategories', {}, false);
       if (catRes.success) { appState.categories = catRes.data; populateCategorySelects(catRes.data); }
       const deptRes = await callGAS('getDepartments', {}, false);
@@ -303,27 +308,29 @@
     function populateGPSelects(gps) {
       ['gramPanchayat', 'filterGP', 'newOfficerGP'].forEach(id => {
         const el = document.getElementById(id);
-        if(el) gps.forEach(gp => el.add(new Option(gp, gp)));
+        if(el) {
+          el.innerHTML = '<option value="">Select Gram Panchayat...</option>';
+          gps.forEach(gp => el.add(new Option(gp, gp)));
+        }
       });
     }
     function populateCategorySelects(cats) {
       const catSelect = document.getElementById('category');
       const filterCat = document.getElementById('filterCategory');
       const officerCat = document.getElementById('newOfficerCategory');
-      if (catSelect) { Object.keys(cats).forEach(c => catSelect.add(new Option(c, c))); }
-      if (filterCat) { Object.keys(cats).forEach(c => filterCat.add(new Option(c, c))); }
-      if (officerCat) { Object.keys(cats).forEach(c => officerCat.add(new Option(c, c))); }
+      if (catSelect) { catSelect.innerHTML = '<option value="">Select Category...</option>'; Object.keys(cats).forEach(c => catSelect.add(new Option(c, c))); }
+      if (filterCat) { filterCat.innerHTML = '<option value="All">All Categories</option>'; Object.keys(cats).forEach(c => filterCat.add(new Option(c, c))); }
+      if (officerCat) { officerCat.innerHTML = '<option value="All">All Categories</option>'; Object.keys(cats).forEach(c => officerCat.add(new Option(c, c))); }
     }
     function populateDepartmentSelects(depts) {
-      ['filterDepartment', 'assignDepartmentSelect', 'newOfficerDept'].forEach(id => {
+      ['assignDepartmentSelect', 'newOfficerDept'].forEach(id => {
         const el = document.getElementById(id);
-        if(el) depts.forEach(d => el.add(new Option(d, d)));
+        if(el) { el.innerHTML = '<option value="">Select Department...</option>'; depts.forEach(d => el.add(new Option(d, d))); }
       });
     }
 
-    // Cascading Dropdown Handlers
     async function handleGPChange() {
-      const gp = document.getElementById('gramPanchayat').value;
+      const selectedGP = document.getElementById('gramPanchayat').value;
       const villageSelect = document.getElementById('village');
       const mouzaSelect = document.getElementById('mouza');
       const customVillageGroup = document.getElementById('customVillageGroup');
@@ -333,22 +340,37 @@
       document.getElementById('jlNo').value = '';
       customVillageGroup.style.display = 'none';
       
-      if (!gp) return;
+      if (!selectedGP) return;
       
-      const [villageRes, mouzaRes] = await Promise.all([
-        callGAS('getVillagesByGP', { gpName: gp }, false),
-        callGAS('getMouzasByGP', { gpName: gp }, false)
-      ]);
+      console.log('Selected GP:', selectedGP);
       
-      villageSelect.innerHTML = '<option value="">Select Village...</option><option value="Other">Other (Not in list)</option>';
-      if (villageRes.success) {
-        villageRes.data.forEach(v => villageSelect.add(new Option(v, v)));
-      }
-      
-      mouzaSelect.innerHTML = '<option value="">Select Mouza...</option>';
-      if (mouzaRes.success) {
-        appState.mouzas = mouzaRes.data;
-        mouzaRes.data.forEach(m => mouzaSelect.add(new Option(m.name, m.name)));
+      try {
+        const [villageRes, mouzaRes] = await Promise.all([
+          callGAS('getVillagesByGP', { gpName: selectedGP }, false),
+          callGAS('getMouzasByGP', { gpName: selectedGP }, false)
+        ]);
+        
+        console.log('Village Response:', villageRes);
+        console.log('Mouza Response:', mouzaRes);
+        
+        villageSelect.innerHTML = '<option value="">Select Village...</option><option value="Other">Other (Not in list)</option>';
+        if (villageRes.success && villageRes.data && villageRes.data.length > 0) {
+          villageRes.data.forEach(v => villageSelect.add(new Option(v, v)));
+        } else {
+          villageSelect.innerHTML = '<option value="">No villages found</option><option value="Other">Other (Enter manually)</option>';
+        }
+        
+        mouzaSelect.innerHTML = '<option value="">Select Mouza...</option>';
+        if (mouzaRes.success && mouzaRes.data && mouzaRes.data.length > 0) {
+          appState.mouzas = mouzaRes.data;
+          mouzaRes.data.forEach(m => mouzaSelect.add(new Option(m.name + (m.jlNo ? ' (JL:' + m.jlNo + ')' : ''), m.name)));
+        } else {
+          mouzaSelect.innerHTML = '<option value="">No mouzas found</option>';
+        }
+      } catch (error) {
+        console.error('Error loading villages/mouzas:', error);
+        villageSelect.innerHTML = '<option value="">Error loading</option><option value="Other">Other (Enter manually)</option>';
+        mouzaSelect.innerHTML = '<option value="">Error loading</option>';
       }
     }
 
@@ -364,7 +386,7 @@
       }
     }
 
-    async function handleMouzaChange() {
+    function handleMouzaChange() {
       const mouzaName = document.getElementById('mouza').value;
       const jlNoInput = document.getElementById('jlNo');
       if (mouzaName && appState.mouzas.length > 0) {
@@ -715,7 +737,6 @@
       showToast(res.message); loadOfficersTable(); loadOfficersListForAssign();
     }
 
-    // Auto-hide header on scroll
     function initAutoHideHeader() {
       let lastScrollTop = 0;
       const header = document.querySelector('.app-header');

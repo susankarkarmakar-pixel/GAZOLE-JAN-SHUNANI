@@ -243,6 +243,52 @@
         </div>
       </div>
     </section>
+
+    <!-- SUCCESS PAGE (নতুন যোগ করা হয়েছে) -->
+    <section id="successPage" style="display: none; padding: 20px; text-align: center;">
+      <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <div style="width: 80px; height: 80px; background: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+          <i class="fa-solid fa-check" style="font-size: 40px; color: white;"></i>
+        </div>
+        <h2 style="color: var(--secondary); margin-bottom: 8px; font-size: 24px;">Grievance Submitted!</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 14px;">অভিযোগ সফলভাবে জমা দেওয়া হয়েছে</p>
+        
+        <div style="background: var(--bg-main); border: 2px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+            YOUR COMPLAINT ID / আপনার অভিযোগ আইডি
+          </p>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <h3 id="successComplaintId" style="font-size: 24px; color: var(--primary); font-weight: 800; letter-spacing: 1px; word-break: break-all;">GJS-2023-89021</h3>
+            <button onclick="copyComplaintId()" style="background: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text-secondary);">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div style="background: #EFF6FF; border-left: 4px solid var(--accent); padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: left;">
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+            <i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>
+            Please save this ID. You can track your grievance status using this ID from the My Grievances section.
+            <br><br>
+            অনুগ্রহ করে এই আইডি সংরক্ষণ করুন। আপনি আমার অভিযোগ বিভাগ থেকে এই আইডি ব্যবহার করে আপনার অভিযোগের অবস্থা ট্র্যাক করতে পারবেন।
+          </p>
+        </div>
+        
+        <button onclick="downloadAcknowledgement()" class="btn btn-outline btn-block" style="margin-bottom: 12px; padding: 14px;">
+          <i class="fa-solid fa-download"></i> DOWNLOAD ACKNOWLEDGEMENT
+          <br><small style="font-size: 11px; opacity: 0.8;">স্বীকৃতির ডাউনলোড কপন</small>
+        </button>
+        
+        <button onclick="submitAnotherComplaint()" class="btn btn-primary btn-block btn-lg" style="margin-bottom: 12px;">
+          SUBMIT ANOTHER COMPLAINT
+          <br><small style="font-size: 13px;">আরেকটি অভিযোগের জন্য ক্লিক করুন</small>
+        </button>
+        
+        <button onclick="returnToHome()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 8px;">
+          Return to Home / মূল পাতায় ফিরে যান
+        </button>
+      </div>
+    </section>
   </main>
 
   <!-- Bottom Navigation -->
@@ -253,7 +299,7 @@
     <button class="nav-item" onclick="switchTab('portal')"><i class="fa-solid fa-user-tie"></i><span>Portal</span></button>
   </nav>
 
-  <!-- Modals (Dashboard, Camera, Login, Action, Create Officer) -->
+  <!-- Modals -->
   <div id="dashboardExplorerModal" class="app-modal"><div class="modal-dialog modal-lg"><div class="modal-header"><h3 id="explorerModalTitle"><i class="fa-solid fa-folder-open"></i> Grievance Records</h3><button type="button" class="modal-close" onclick="closeDashboardExplorer()">&times;</button></div><div class="modal-body" style="max-height: 75vh; overflow-y: auto;"><div id="explorerComplaintsContainer" class="dashboard-filtered-grid"></div></div></div></div>
   
   <div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body text-center"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p class="camera-tip" style="margin:12px 0; color:var(--text-muted);">Camera opens inside the app &mdash; your form remains intact.</p><button type="button" class="btn-capture" onclick="takeSnapshot()"><i class="fa-solid fa-camera-retro"></i></button></div></div></div>
@@ -269,16 +315,17 @@
 
   <script>
     // ⚠️ আপনার Google Apps Script Web App URL টি এখানে বসান
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbx6ZKUhnj3fLLBd1f30-dgv9Kx-tWOdQCdnXD4nQludZJQBu2yMTZSJMY2wfICE4UGeRg/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzMs9UeIxbhCaLwDzXNumd7R2mz2tfqxXHubnHDq7QXuJ6PELFYyNZC4WbBsNaCfPd6yQ/exec";
 
     let appState = { currentTab: 'new', portalSubTab: 'complaints', selectedFiles: [], mediaStream: null, currentUser: null, cachedComplaints: [], cachedOfficers: [], categories: [], gpList: [], departments: [] };
 
-    // Universal Fetch Helper for GitHub Pages
+    // Universal Fetch Helper
     async function callGAS(action, payload = {}, showLoaderFlag = true) {
       if (showLoaderFlag) showLoader('Processing...');
       try {
         const response = await fetch(GAS_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: action, ...payload })
         });
         const result = await response.json();
@@ -455,24 +502,120 @@
     }
     function removeAttachment(idx) { appState.selectedFiles.splice(idx, 1); renderAttachments(); }
 
-    // Form Submission
+    // Form Submission with Success Page
     async function handleComplaintSubmit(e) {
       e.preventDefault();
+      
       const formData = {
-        fullName: document.getElementById('fullName').value.trim(), mobile: document.getElementById('mobile').value.trim(),
-        relation: document.getElementById('relation').value, guardianName: document.getElementById('guardianName').value.trim(),
-        gramPanchayat: document.getElementById('gramPanchayat').value, village: document.getElementById('village').value.trim(),
-        category: document.getElementById('category').value, description: document.getElementById('description').value.trim(),
-        files: appState.selectedFiles
+        fullName: document.getElementById('fullName').value.trim(),
+        mobile: document.getElementById('mobile').value.trim(),
+        relation: document.getElementById('relation').value,
+        guardianName: document.getElementById('guardianName').value.trim(),
+        gramPanchayat: document.getElementById('gramPanchayat').value,
+        village: document.getElementById('village').value.trim(),
+        category: document.getElementById('category').value,
+        description: document.getElementById('description').value.trim(),
+        files: appState.selectedFiles,
+        source: 'Citizen Web Portal'
       };
-      if (formData.mobile.length !== 10) { showToast('Please enter a valid 10-digit mobile number.'); return; }
+      
+      if (formData.mobile.length !== 10) {
+        showToast('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+      
       const res = await callGAS('submitComplaint', { formData: formData });
+      
       if (res.success) {
-        document.getElementById('complaintForm').reset(); appState.selectedFiles = []; renderAttachments();
-        alert('Success!\n' + res.message);
-        document.getElementById('trackInput').value = res.complaintId; switchTab('track');
-        handleTrackSearch({ preventDefault: () => {} });
-      } else { alert('Error: ' + (res.error || 'Unknown error')); }
+        // Show beautiful success page
+        showSuccessPage(res.complaintId);
+      } else {
+        alert('Error: ' + (res.error || 'Submission failed'));
+      }
+    }
+
+    // Success Page Functions
+    function showSuccessPage(complaintId) {
+      document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
+      document.querySelector('.bottom-nav').style.display = 'none';
+      document.getElementById('successPage').style.display = 'block';
+      document.getElementById('successComplaintId').innerText = complaintId;
+      sessionStorage.setItem('currentComplaintId', complaintId);
+      window.scrollTo(0, 0);
+    }
+
+    function hideSuccessPage() {
+      document.querySelectorAll('.tab-view').forEach(t => t.style.display = '');
+      document.querySelector('.bottom-nav').style.display = 'flex';
+      document.getElementById('successPage').style.display = 'none';
+      switchTab('new');
+    }
+
+    function copyComplaintId() {
+      const id = document.getElementById('successComplaintId').innerText;
+      navigator.clipboard.writeText(id).then(() => {
+        showToast('Complaint ID copied!');
+      });
+    }
+
+    function submitAnotherComplaint() {
+      document.getElementById('complaintForm').reset();
+      appState.selectedFiles = [];
+      renderAttachments();
+      hideSuccessPage();
+    }
+
+    function returnToHome() {
+      hideSuccessPage();
+    }
+
+    async function downloadAcknowledgement() {
+      const complaintId = sessionStorage.getItem('currentComplaintId');
+      if (!complaintId) { showToast('Complaint ID not found'); return; }
+      
+      showLoader('Generating acknowledgement...');
+      const res = await callGAS('trackComplaint', { query: complaintId }, false);
+      hideLoader();
+      
+      if (!res.success || !res.data || res.data.length === 0) {
+        showToast('Could not fetch complaint details');
+        return;
+      }
+      
+      const c = res.data[0];
+      const content = `GAZOLE JAN SHUNANI - GRIEVANCE ACKNOWLEDGEMENT
+===============================================
+
+Complaint ID: ${c.ComplaintID}
+Date: ${c.Date} ${c.Time}
+
+COMPLAINANT DETAILS:
+Name: ${c.FullName}
+Mobile: ${c.Mobile}
+Guardian: ${c.GuardianName} (${c.Relation})
+
+LOCATION:
+Gram Panchayat: ${c.GramPanchayat}
+Village: ${c.Village}
+
+GRIEVANCE DETAILS:
+Category: ${c.Category}
+Description: ${c.Description}
+
+STATUS: ${c.Status}
+
+This is a computer-generated acknowledgement.
+For queries, contact: BDO Office, Gazole Block
+===============================================`;
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Acknowledgement_${complaintId}.txt`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      showToast('Acknowledgement downloaded!');
     }
 
     // Portal & Auth

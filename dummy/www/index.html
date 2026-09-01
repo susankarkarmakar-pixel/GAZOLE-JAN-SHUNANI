@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GAZOLE JAN SHUNANI - Public Grievance Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root { --primary: #E65100; --primary-light: #FF9800; --primary-subtle: #FFF3E0; --primary-dark: #BF360C; --secondary: #1E293B; --accent: #2563EB; --bg-main: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0; --text-primary: #0F172A; --text-secondary: #475569; --text-muted: #94A3B8; --success: #10B981; --warning: #F59E0B; --danger: #EF4444; --radius: 12px; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-primary); line-height: 1.5; padding-bottom: 85px; min-height: 100vh; }
+    .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #ffffff; padding: 16px 20px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+    .header-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .brand-wrapper { display: flex; align-items: center; gap: 12px; }
+    .gov-emblem { background: rgba(255, 255, 255, 0.2); width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .brand-text h1 { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+    .brand-text p { font-size: 12px; opacity: 0.9; font-weight: 500; }
+    .header-btn { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .app-main { max-width: 960px; margin: 20px auto; padding: 0 16px; }
+    .tab-view { display: none; } .tab-view.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .view-header { margin-bottom: 20px; } .view-header h2 { font-size: 22px; font-weight: 700; color: var(--secondary); } .view-header p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+    .form-card, .track-search-card, .portal-table-card, .filter-card, .breakdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); margin-bottom: 20px; }
+    .form-section { margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); } .form-section:last-child { border-bottom: none; margin-bottom: 0; }
+    .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .step-num { background: var(--primary); color: #ffffff; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+    .section-title h3 { font-size: 16px; font-weight: 700; color: var(--secondary); }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; } .full-width { grid-column: span 2; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 13px; font-weight: 600; color: var(--text-secondary); } .required { color: var(--danger); }
+    input, select, textarea { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-primary); background: #ffffff; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.12); }
+    .input-with-prefix { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; background: #ffffff; overflow: hidden; }
+    .prefix { padding: 10px 12px; background: var(--bg-main); color: var(--text-secondary); font-weight: 600; font-size: 14px; border-right: 1px solid var(--border); }
+    .input-with-prefix input { border: none; flex: 1; border-radius: 0; } .input-readonly { background: var(--bg-main); cursor: not-allowed; }
+    .evidence-box { background: var(--bg-main); border: 2px dashed var(--border); border-radius: 10px; padding: 16px; }
+    .evidence-hint { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+    .action-buttons-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .attachments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; margin-top: 16px; }
+    .attachment-preview-card { position: relative; border-radius: 8px; overflow: hidden; height: 100px; background: #ffffff; border: 1px solid var(--border); }
+    .attachment-preview-card img { width: 100%; height: 100%; object-fit: cover; }
+    .remove-attachment-btn { position: absolute; top: 4px; right: 4px; background: rgba(239, 68, 68, 0.9); color: #ffffff; border: none; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+    .btn { padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; }
+    .btn-primary { background: var(--primary); color: #ffffff; } .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--secondary); color: #ffffff; }
+    .btn-outline { background: #ffffff; border: 1px solid var(--border); color: var(--text-primary); } .btn-outline:hover { background: var(--bg-main); }
+    .btn-danger { background: var(--danger); color: #ffffff; }
+    .btn-block { width: 100%; } .btn-lg { padding: 14px 20px; font-size: 16px; } .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow); position: relative; transition: all 0.2s ease; }
+    .stat-card.clickable { cursor: pointer; } .stat-card.clickable:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); background: #FFFDF9; }
+    .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .stat-icon.orange { background: #FFF3E0; color: #E65100; } .stat-icon.green { background: #ECFDF5; color: #10B981; } .stat-icon.yellow { background: #FEF3C7; color: #D97706; } .stat-icon.blue { background: #EFF6FF; color: #2563EB; }
+    .stat-value { display: block; font-size: 22px; font-weight: 800; color: var(--secondary); }
+    .stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+    .click-hint { font-size: 10px; color: var(--primary); font-weight: 700; display: block; margin-top: 2px; }
+    .dashboard-breakdown-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .section-subtext { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .breakdown-list { display: flex; flex-direction: column; gap: 8px; }
+    .breakdown-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-main); border-radius: 8px; font-size: 13px; cursor: pointer; transition: all 0.2s ease; }
+    .breakdown-item:hover { background: var(--primary-subtle); border-left: 3px solid var(--primary); }
+    .breakdown-item strong { background: #ffffff; padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border); }
+    .dashboard-filtered-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .complaint-result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-top: 14px; box-shadow: var(--shadow); }
+    .result-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; }
+    .complaint-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .badge-pending { background: #FEF3C7; color: #92400E; } .badge-assigned { background: #DBEAFE; color: #1E40AF; } .badge-inprogress { background: #EDE9FE; color: #5B21B6; } .badge-resolved { background: #D1FAE5; color: #065F46; } .badge-closed { background: #E2E8F0; color: #475569; }
+    .timeline-step { padding-left: 16px; border-left: 2px solid var(--primary); margin: 10px 0; }
+    .portal-user-bar { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 14px 20px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .badge-dept { background: var(--primary-subtle); color: var(--primary-dark); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .portal-nav-tabs { display: flex; gap: 10px; margin-bottom: 16px; }
+    .portal-tab-btn { padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border); background: #ffffff; font-weight: 700; font-size: 13px; cursor: pointer; color: var(--text-secondary); }
+    .portal-tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+    .officers-mgmt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .table-responsive { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .data-table th, .data-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table th { background: var(--bg-main); color: var(--text-secondary); font-weight: 700; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #ffffff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); z-index: 90; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); }
+    .nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-secondary); font-size: 11px; font-weight: 600; cursor: pointer; }
+    .nav-item.active { color: var(--primary); }
+    .app-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+    .modal-dialog { background: #ffffff; border-radius: var(--radius); width: 100%; max-width: 520px; overflow: hidden; box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; }
+    .modal-dialog.modal-lg { max-width: 720px; } .modal-dialog.modal-sm { max-width: 380px; }
+    .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); }
+    .modal-body { padding: 20px; }
+    .camera-stream-wrapper { width: 100%; height: 260px; background: #000000; border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+    .camera-stream-wrapper video { width: 100%; height: 100%; object-fit: cover; }
+    .btn-capture { background: var(--primary); color: #ffffff; width: 56px; height: 56px; border-radius: 50%; border: 3px solid #ffffff; font-size: 20px; cursor: pointer; }
+    .login-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+    .login-tab-btn { flex: 1; background: none; border: none; padding: 10px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; }
+    .login-tab-btn.active { color: var(--primary); border-color: var(--primary); }
+    .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); z-index: 300; display: flex; align-items: center; justify-content: center; }
+    .spinner-box { background: #ffffff; padding: 24px 32px; border-radius: var(--radius); text-align: center; }
+    .app-spinner { width: 38px; height: 38px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .app-toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #1E293B; color: #ffffff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; z-index: 400; display: none; }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); } .empty-state i { font-size: 44px; margin-bottom: 10px; }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .dashboard-breakdown-grid { grid-template-columns: 1fr; } .filter-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <div class="gov-emblem"><i class="fa-solid fa-landmark-dome"></i></div>
+        <div class="brand-text">
+          <h1>GAZOLE JAN SHUNANI</h1>
+          <p>Public Grievance Redressal Portal | Gazole Development Block</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="auth-status-btn" class="header-btn" onclick="openLoginModal()">
+          <i class="fa-solid fa-user-shield"></i> <span>Officer Login</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- TAB 1: NEW COMPLAINT -->
+    <section id="tab-new" class="tab-view active">
+      <div class="view-header"><h2>Register New Grievance</h2><p>Submit your complaint directly to the Block Administration for speedy redressal.</p></div>
+      <div class="form-card">
+        <form id="complaintForm" onsubmit="handleComplaintSubmit(event)">
+          <div class="form-section">
+            <div class="section-title"><span class="step-num">1</span><h3>Complainant Details</h3></div>
+            <div class="form-grid">
+              <div class="form-group full-width"><label for="fullName">Full Name <span class="required">*</span></label><input type="text" id="fullName" name="fullName" placeholder="Enter citizen's full name" required></div>
+              <div class="form-group"><label for="mobile">Mobile Number <span class="required">*</span></label><div class="input-with-prefix"><span class="prefix">+91</span><input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="10-digit mobile number" required pattern="[0-9]{10}"></div></div>
+              <div class="form-group"><label for="relation">Relationship</label><select id="relation" name="relation"><option value="S/O">Son of (S/O)</option><option value="D/O">Daughter of (D/O)</option><option value="W/O">Wife of (W/O)</option><option value="C/O">Care of (C/O)</option></select></div>
+              <div class="form-group full-width"><label for="guardianName">Father / Husband / Guardian Name</label><input type="text" id="guardianName" name="guardianName" placeholder="Enter guardian name"></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title"><span class="step-num">2</span><h3>Location & Address</h3></div>
+            <div class="form-grid">
+              <div class="form-group"><label for="gramPanchayat">Gram Panchayat <span class="required">*</span></label><select id="gramPanchayat" name="gramPanchayat" required><option value="">Select Gram Panchayat...</option></select></div>
+              <div class="form-group"><label for="village">Village / Para / Locality <span class="required">*</span></label><input type="text" id="village" name="village" placeholder="Enter village name or landmark" required></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title"><span class="step-num">3</span><h3>Grievance Information</h3></div>
+            <div class="form-grid">
+              <div class="form-group full-width"><label for="category">Complaint Category <span class="required">*</span></label><select id="category" name="category" required><option value="">Select Category...</option></select></div>
+              <div class="form-group full-width"><label for="description">Detailed Description <span class="required">*</span></label><textarea id="description" name="description" rows="4" placeholder="Describe the grievance in detail..." required></textarea></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="section-title"><span class="step-num">4</span><h3>Site Photo / Supporting Documents</h3></div>
+            <div class="evidence-box">
+              <p class="evidence-hint">Capture live site photos using camera or upload documents from your gallery.</p>
+              <div class="action-buttons-group">
+                <button type="button" class="btn btn-secondary" onclick="openCameraModal()"><i class="fa-solid fa-camera"></i> Open Camera</button>
+                <button type="button" class="btn btn-outline" onclick="triggerGalleryUpload()"><i class="fa-solid fa-images"></i> Upload from Gallery</button>
+                <input type="file" id="fileUploadInput" accept="image/*,.pdf" multiple style="display: none;" onchange="handleFileSelection(event)">
+              </div>
+              <div id="attachmentsPreview" class="attachments-grid"></div>
+            </div>
+          </div>
+          <div class="form-submit-wrapper">
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-block btn-lg"><i class="fa-solid fa-paper-plane"></i> Submit Grievance</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 2: TRACK STATUS -->
+    <section id="tab-track" class="tab-view">
+      <div class="view-header"><h2>Track Grievance Status</h2><p>Search using your <strong>10-digit Mobile Number</strong>, <strong>Complainant Name</strong>, or <strong>Complaint ID</strong>.</p></div>
+      <div class="track-search-card">
+        <form onsubmit="handleTrackSearch(event)" class="search-form">
+          <div class="search-input-group" style="display:flex; gap:8px;">
+            <input type="text" id="trackInput" placeholder="Enter Mobile Number, Name, or ID..." required style="flex:1;">
+            <button type="submit" id="trackBtn" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+          </div>
+        </form>
+      </div>
+      <div id="trackResultContainer" class="track-results-wrapper">
+        <div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>Type your 10-digit Mobile Number, Citizen Name, or Complaint ID above to view live progress.</p></div>
+      </div>
+    </section>
+
+    <!-- TAB 3: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-view">
+      <div class="view-header"><h2>Public Redressal Dashboard</h2><p>Click any card or breakdown item below to view complaints.</p></div>
+      <div class="stats-grid">
+        <div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'All', 'All Complaints')"><div class="stat-icon orange"><i class="fa-solid fa-inbox"></i></div><div class="stat-content"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total Grievances</span><span class="click-hint"><i class="fa-solid fa-arrow-pointer"></i> Click to view</span></div></div>
+        <div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'Resolved', 'Resolved Complaints')"><div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div><div class="stat-content"><span class="stat-value" id="statResolved">0</span><span class="stat-label">Resolved</span><span class="click-hint"><i class="fa-solid fa-arrow-pointer"></i> Click to view</span></div></div>
+        <div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'Pending', 'Pending Complaints')"><div class="stat-icon yellow"><i class="fa-solid fa-clock"></i></div><div class="stat-content"><span class="stat-value" id="statPending">0</span><span class="stat-label">Pending Review</span><span class="click-hint"><i class="fa-solid fa-arrow-pointer"></i> Click to view</span></div></div>
+        <div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'In Progress', 'In Progress Complaints')"><div class="stat-icon blue"><i class="fa-solid fa-spinner"></i></div><div class="stat-content"><span class="stat-value" id="statInProgress">0</span><span class="stat-label">In Progress</span><span class="click-hint"><i class="fa-solid fa-arrow-pointer"></i> Click to view</span></div></div>
+      </div>
+      <div class="dashboard-breakdown-grid">
+        <div class="breakdown-card"><h3><i class="fa-solid fa-layer-group"></i> Category-wise Distribution</h3><p class="section-subtext">Click any category to filter complaints</p><div id="categoryStatsList" class="breakdown-list"></div></div>
+        <div class="breakdown-card"><h3><i class="fa-solid fa-map-location-dot"></i> Gram Panchayat Summary</h3><p class="section-subtext">Click any Gram Panchayat to filter complaints</p><div id="gpStatsList" class="breakdown-list"></div></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: PORTAL -->
+    <section id="tab-portal" class="tab-view">
+      <div id="portalLoggedOut" class="portal-auth-card" style="text-align:center; padding:40px;">
+        <div class="auth-icon" style="font-size:48px; color:var(--primary); margin-bottom:16px;"><i class="fa-solid fa-user-lock"></i></div>
+        <h2>Officer & Admin Portal</h2>
+        <p style="margin:12px 0 24px; color:var(--text-secondary);">Access restricted to authorized block officers and administrative personnel.</p>
+        <button class="btn btn-primary btn-lg" onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Sign In to Portal</button>
+      </div>
+      <div id="portalLoggedIn" style="display: none;">
+        <div class="portal-user-bar">
+          <div class="user-info"><i class="fa-solid fa-circle-user" style="font-size:24px; color:var(--primary);"></i><div><strong id="loggedUserName">Officer Name</strong><br><span id="loggedUserRole" class="complaint-badge badge-assigned">Role</span> <span id="loggedUserDept" class="badge-dept">Department</span></div></div>
+          <div class="portal-bar-actions"><button class="btn btn-outline btn-sm" onclick="refreshOfficerComplaints()"><i class="fa-solid fa-rotate"></i> Refresh</button><button class="btn btn-danger btn-sm" onclick="handleLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
+        </div>
+        <div class="portal-nav-tabs">
+          <button id="pTabBtnComplaints" class="portal-tab-btn active" onclick="switchPortalSubTab('complaints')"><i class="fa-solid fa-list-check"></i> Grievances Management</button>
+          <button id="pTabBtnOfficers" class="portal-tab-btn" onclick="switchPortalSubTab('officers')" style="display: none;"><i class="fa-solid fa-users-gear"></i> Officer Management</button>
+        </div>
+        <div id="portalSubTabComplaints">
+          <div class="filter-card">
+            <div class="filter-grid">
+              <div class="filter-group"><label>Status</label><select id="filterStatus" onchange="applyPortalFilters()"><option value="All">All Statuses</option><option value="Pending">Pending</option><option value="Assigned">Assigned</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Closed">Closed</option></select></div>
+              <div class="filter-group"><label>Gram Panchayat</label><select id="filterGP" onchange="applyPortalFilters()"><option value="All">All Gram Panchayats</option></select></div>
+              <div class="filter-group"><label>Department</label><select id="filterDepartment" onchange="applyPortalFilters()"><option value="All">All Departments</option></select></div>
+              <div class="filter-group"><label>Search</label><input type="text" id="filterSearch" placeholder="Search ID, Name, Mobile..." oninput="applyPortalFilters()"></div>
+            </div>
+          </div>
+          <div class="portal-table-card">
+            <div class="card-header" style="margin-bottom:12px;"><h3>Registered Grievances (<span id="portalFilteredCount">0</span>)</h3></div>
+            <div class="table-responsive">
+              <table class="data-table"><thead><tr><th>ID</th><th>Date</th><th>Complainant</th><th>GP & Village</th><th>Category & Issue</th><th>Assigned Dept / Officer</th><th>Status</th><th>Action</th></tr></thead><tbody id="portalComplaintsTableBody"><tr><td colspan="8" class="text-center">Loading complaints...</td></tr></tbody></table>
+            </div>
+          </div>
+        </div>
+        <div id="portalSubTabOfficers" style="display: none;">
+          <div class="officers-mgmt-header"><div><h3>Registered Block Officers</h3><p>Create and assign officers to specific departments and Gram Panchayats.</p></div><button class="btn btn-primary" onclick="openCreateOfficerModal()"><i class="fa-solid fa-user-plus"></i> Add New Officer</button></div>
+          <div class="portal-table-card"><div class="table-responsive"><table class="data-table"><thead><tr><th>User ID</th><th>Officer Name</th><th>Mobile</th><th>Role</th><th>Department</th><th>Assigned GP</th><th>Status</th><th>Action</th></tr></thead><tbody id="officersTableBody"><tr><td colspan="8" class="text-center">Loading officers...</td></tr></tbody></table></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('new')"><i class="fa-solid fa-pen-to-square"></i><span>New Entry</span></button>
+    <button class="nav-item" onclick="switchTab('track')"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Track</span></button>
+    <button class="nav-item" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button>
+    <button class="nav-item" onclick="switchTab('portal')"><i class="fa-solid fa-user-tie"></i><span>Portal</span></button>
+  </nav>
+
+  <!-- Modals (Dashboard, Camera, Login, Action, Create Officer) -->
+  <div id="dashboardExplorerModal" class="app-modal"><div class="modal-dialog modal-lg"><div class="modal-header"><h3 id="explorerModalTitle"><i class="fa-solid fa-folder-open"></i> Grievance Records</h3><button type="button" class="modal-close" onclick="closeDashboardExplorer()">&times;</button></div><div class="modal-body" style="max-height: 75vh; overflow-y: auto;"><div id="explorerComplaintsContainer" class="dashboard-filtered-grid"></div></div></div></div>
+
+  <div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body text-center"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p class="camera-tip" style="margin:12px 0; color:var(--text-muted);">Camera opens inside the app &mdash; your form remains intact.</p><button type="button" class="btn-capture" onclick="takeSnapshot()"><i class="fa-solid fa-camera-retro"></i></button></div></div></div>
+
+  <div id="loginModal" class="app-modal"><div class="modal-dialog modal-sm"><div class="modal-header"><h3><i class="fa-solid fa-shield-halved"></i> Sign In to Portal</h3><button type="button" class="modal-close" onclick="closeLoginModal()">&times;</button></div><div class="modal-body"><div class="login-tabs"><button type="button" id="tabBtnOfficer" class="login-tab-btn active" onclick="switchLoginMode('officer')">Officer Login</button><button type="button" id="tabBtnAdmin" class="login-tab-btn" onclick="switchLoginMode('admin')">Admin Login</button></div><form id="officerLoginForm" onsubmit="handleOfficerLogin(event)"><div class="form-group"><label for="loginMobile">Mobile Number</label><input type="tel" id="loginMobile" maxlength="10" placeholder="10-digit registered mobile" required></div><div class="form-group"><label for="loginPin">Security PIN</label><input type="password" id="loginPin" maxlength="6" placeholder="Enter PIN" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Officer</button></form><form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display: none;"><div class="form-group"><label for="adminPassword">Master Password</label><input type="password" id="adminPassword" placeholder="Enter BDO admin password" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Admin</button></form></div></div></div>
+
+  <div id="actionModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-clipboard-check"></i> Action & Officer Assignment</h3><button type="button" class="modal-close" onclick="closeActionModal()">&times;</button></div><div class="modal-body"><form id="actionUpdateForm" onsubmit="handleActionUpdateSubmit(event)"><input type="hidden" id="actionComplaintId"><div class="form-group"><label>Complaint ID</label><input type="text" id="actionDisplayId" readonly class="input-readonly"></div><div class="form-grid"><div class="form-group"><label for="updateStatusSelect">Update Status <span class="required">*</span></label><select id="updateStatusSelect" required><option value="Pending">Pending</option><option value="Assigned">Assigned</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Closed">Closed</option></select></div><div class="form-group"><label for="assignDepartmentSelect">Tag Department</label><select id="assignDepartmentSelect"><option value="">Select Department...</option></select></div></div><div class="form-group"><label for="assignOfficerSelect">Assign Officer</label><select id="assignOfficerSelect"><option value="">Select Officer...</option></select></div><div class="form-group"><label for="updateActionTaken">Action Taken Description</label><textarea id="updateActionTaken" rows="3" placeholder="Enter field inquiry details or resolution..."></textarea></div><div class="form-group"><label for="updateRemarks">Official Remarks</label><input type="text" id="updateRemarks" placeholder="Optional notes"></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Save Status & Tagging</button></form></div></div></div>
+
+  <div id="createOfficerModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-user-plus"></i> Register New Officer</h3><button type="button" class="modal-close" onclick="closeCreateOfficerModal()">&times;</button></div><div class="modal-body"><form id="createOfficerForm" onsubmit="handleCreateOfficerSubmit(event)"><div class="form-group"><label for="newOfficerName">Officer Full Name <span class="required">*</span></label><input type="text" id="newOfficerName" required></div><div class="form-grid"><div class="form-group"><label for="newOfficerMobile">Mobile (Login ID) <span class="required">*</span></label><input type="tel" id="newOfficerMobile" maxlength="10" required pattern="[0-9]{10}"></div><div class="form-group"><label for="newOfficerPin">Security PIN <span class="required">*</span></label><input type="password" id="newOfficerPin" maxlength="6" required></div></div><div class="form-grid"><div class="form-group"><label for="newOfficerRole">Officer Role</label><select id="newOfficerRole"><option value="Officer">Officer</option><option value="Nirman Sahayak">Nirman Sahayak</option><option value="GP Secretary">GP Secretary</option><option value="Executive Assistant">Executive Assistant</option><option value="Supervisor">Supervisor</option><option value="Admin">Admin</option></select></div><div class="form-group"><label for="newOfficerGP">Assigned GP</label><select id="newOfficerGP"><option value="All">All Gram Panchayats</option></select></div></div><div class="form-group"><label for="newOfficerDept">Tagged Department <span class="required">*</span></label><select id="newOfficerDept" required><option value="">Select Department...</option></select></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Create Officer Account</button></form></div></div></div>
+
+  <div id="appToast" class="app-toast"></div>
+  <div id="loadingOverlay" class="loading-overlay" style="display: none;"><div class="spinner-box"><div class="app-spinner"></div><p id="loadingMessage">Loading...</p></div></div>
+
+  <script src="cordova.js"></script>
+  <script>
+    // ⚠️ আপনার Google Apps Script Web App URL টি এখানে বসান
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwRYQM6RX-9PAwkFbhgUgpwan4RmDwTfaIyC0i-Q8MScOsUBPEbX1H7lsdJT68OI-eBxw/exec";
+
+    let appState = { currentTab: 'new', portalSubTab: 'complaints', selectedFiles: [], mediaStream: null, currentUser: null, cachedComplaints: [], cachedOfficers: [], categories: [], gpList: [], departments: [] };
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+      var permissions = cordova.plugins.permissions;
+      permissions.hasPermission(permissions.CAMERA, function(status) {
+        if (!status.hasPermission) {
+          permissions.requestPermission(permissions.CAMERA, function(status) {
+            if (!status.hasPermission) console.warn("Camera permission denied");
+          }, function() {
+            console.error("Camera permission request failed");
+          });
+        }
+      });
+    }
+
+    // Universal Fetch Helper for GitHub Pages
+    async function callGAS(action, payload = {}, showLoaderFlag = true) {
+      if (showLoaderFlag) showLoader('Processing...');
+      try {
+        const response = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: action, ...payload })
+        });
+        const result = await response.json();
+        if (showLoaderFlag) hideLoader();
+        return result;
+      } catch (error) {
+        if (showLoaderFlag) hideLoader();
+        console.error("GAS Fetch Error:", error);
+        showToast("Network error. Please check your connection.");
+        return { success: false, error: error.message };
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() { initAppMetadata(); checkSavedSession(); });
+
+    async function initAppMetadata() {
+      showLoader('Initializing Gazole Portal...');
+      const gpRes = await callGAS('getGPList', {}, false);
+      if (gpRes.success) { appState.gpList = gpRes.data; populateGPSelects(gpRes.data); }
+
+      const catRes = await callGAS('getCategories', {}, false);
+      if (catRes.success) { appState.categories = catRes.data; populateCategorySelects(catRes.data); }
+
+      const deptRes = await callGAS('getDepartments', {}, false);
+      if (deptRes.success) { appState.departments = deptRes.data; populateDepartmentSelects(deptRes.data); }
+
+      hideLoader();
+      loadDashboardStats();
+      fetchAllComplaintsToCache();
+    }
+
+    async function fetchAllComplaintsToCache() {
+      const res = await callGAS('getAllComplaints', {}, false);
+      if (res.success) appState.cachedComplaints = res.data;
+    }
+
+    function populateGPSelects(gps) {
+      ['gramPanchayat', 'filterGP', 'newOfficerGP'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) gps.forEach(gp => el.add(new Option(gp, gp)));
+      });
+    }
+    function populateCategorySelects(cats) {
+      const el = document.getElementById('category');
+      if(el) cats.forEach(c => el.add(new Option(c, c)));
+    }
+    function populateDepartmentSelects(depts) {
+      ['filterDepartment', 'assignDepartmentSelect', 'newOfficerDept'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) depts.forEach(d => el.add(new Option(d, d)));
+      });
+    }
+
+    function switchTab(tabId) {
+      appState.currentTab = tabId;
+      document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      document.querySelectorAll('.bottom-nav .nav-item').forEach((btn, idx) => {
+        const tabs = ['new', 'track', 'dashboard', 'portal'];
+        btn.classList.toggle('active', tabs[idx] === tabId);
+      });
+      if (tabId === 'dashboard') { loadDashboardStats(); fetchAllComplaintsToCache(); }
+      else if (tabId === 'portal' && appState.currentUser) refreshOfficerComplaints();
+    }
+
+    function switchPortalSubTab(subTab) {
+      appState.portalSubTab = subTab;
+      document.getElementById('pTabBtnComplaints').classList.toggle('active', subTab === 'complaints');
+      document.getElementById('pTabBtnOfficers').classList.toggle('active', subTab === 'officers');
+      document.getElementById('portalSubTabComplaints').style.display = (subTab === 'complaints') ? 'block' : 'none';
+      document.getElementById('portalSubTabOfficers').style.display = (subTab === 'officers') ? 'block' : 'none';
+      if (subTab === 'officers') loadOfficersTable();
+    }
+
+    async function handleTrackSearch(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const query = document.getElementById('trackInput').value.trim();
+      if (!query) { showToast('Please enter a search keyword.'); return; }
+      const res = await callGAS('trackComplaint', { query: query });
+      const container = document.getElementById('trackResultContainer');
+      if (!res.success || !res.data || res.data.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-exclamation" style="color:var(--warning);"></i><p>${res.message || 'No matching grievances found.'}</p></div>`;
+        return;
+      }
+      let html = `<p style="margin-bottom:12px; font-weight:700; color:var(--text-secondary);">Found ${res.data.length} Grievance Record(s):</p>`;
+      res.data.forEach(c => {
+        const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+        html += `<div class="complaint-result-card"><div class="result-header"><div><h3 style="color:var(--primary); font-weight:800;">${c.ComplaintID}</h3><small style="color:var(--text-secondary);">${c.Date} at ${c.Time}</small></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><div style="margin-bottom:12px;"><p><strong>Complainant:</strong> ${c.FullName} (${c.Relation || 'S/O'} ${c.GuardianName || 'N/A'})</p><p><strong>Mobile Number:</strong> ${c.Mobile}</p><p><strong>Location:</strong> Vill. ${c.Village}, GP: ${c.GramPanchayat}</p><p><strong>Category:</strong> ${c.Category}</p><p style="margin-top:6px; background:var(--bg-main); padding:8px 12px; border-radius:6px;"><strong>Issue:</strong> ${c.Description}</p></div><div class="timeline-step"><strong>Current Status: ${c.Status}</strong>${c.AssignedDepartment ? `<p style="font-size:13px; color:var(--primary); font-weight:600;">Tagged Dept: ${c.AssignedDepartment}</p>` : ''}${c.AssignedOfficer ? `<p style="font-size:13px; color:var(--secondary); font-weight:600;">Assigned Officer: ${c.AssignedOfficer}</p>` : ''}<p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${c.ActionTaken ? 'Action Taken: ' + c.ActionTaken : 'Pending administrative action.'}</p>${c.Remarks ? `<p style="font-size:12px; color:var(--text-muted);">Remarks: ${c.Remarks}</p>` : ''}</div>${c.EvidenceURLs ? `<div style="margin-top:12px;"><a href="${c.EvidenceURLs.split(',')[0]}" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-image"></i> View Site Photo / Document</a></div>` : ''}</div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function loadDashboardStats() {
+      const res = await callGAS('getDashboardStats', {}, false);
+      if (!res.success) return;
+      const d = res.data;
+      document.getElementById('statTotal').innerText = d.total || 0;
+      document.getElementById('statResolved').innerText = d.resolved || 0;
+      document.getElementById('statPending').innerText = d.pending || 0;
+      document.getElementById('statInProgress').innerText = d.inProgress || 0;
+      const catList = document.getElementById('categoryStatsList'); catList.innerHTML = '';
+      Object.keys(d.byCategory || {}).forEach(k => { catList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('category', '${k}', '${k} Grievances')"><span><i class="fa-solid fa-folder-open" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byCategory[k]}</strong></div>`; });
+      const gpList = document.getElementById('gpStatsList'); gpList.innerHTML = '';
+      Object.keys(d.byGP || {}).forEach(k => { gpList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('gp', '${k}', '${k} GP Grievances')"><span><i class="fa-solid fa-location-dot" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byGP[k]}</strong></div>`; });
+    }
+
+    async function handleDashboardCardClick(filterType, filterValue, title) {
+      showLoader('Opening ' + title + '...');
+      let filters = {};
+      if (filterType === 'status' && filterValue !== 'All') filters.status = filterValue;
+      if (filterType === 'category') filters.category = filterValue;
+      if (filterType === 'gp') filters.gramPanchayat = filterValue;
+      const res = await callGAS('getAllComplaints', { filters: filters });
+      const modal = document.getElementById('dashboardExplorerModal');
+      const container = document.getElementById('explorerComplaintsContainer');
+      document.getElementById('explorerModalTitle').innerHTML = `<i class="fa-solid fa-folder-open"></i> ${title} (${res.data ? res.data.length : 0})`;
+      if (!res.success || !res.data || res.data.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No complaints found for this selection.</p></div>`;
+      } else {
+        let html = '';
+        res.data.forEach(c => {
+          const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+          html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
+        });
+        container.innerHTML = html;
+      }
+      modal.style.display = 'flex';
+      hideLoader();
+    }
+    function closeDashboardExplorer() { document.getElementById('dashboardExplorerModal').style.display = 'none'; }
+
+    // Camera & File Upload
+    function openCameraModal() {
+      const modal = document.getElementById('cameraModal'); modal.style.display = 'flex';
+      const video = document.getElementById('cameraVideo');
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } } })
+          .then(stream => { appState.mediaStream = stream; video.srcObject = stream; })
+          .catch(err => { showToast('Camera unavailable. Use Gallery instead.'); closeCameraModal(); });
+      }
+    }
+    function closeCameraModal() {
+      if (appState.mediaStream) { appState.mediaStream.getTracks().forEach(t => t.stop()); appState.mediaStream = null; }
+      document.getElementById('cameraModal').style.display = 'none';
+    }
+    function takeSnapshot() {
+      const video = document.getElementById('cameraVideo');
+      const canvas = document.getElementById('cameraCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      appState.selectedFiles.push({ name: 'photo_' + Date.now() + '.jpg', mimeType: 'image/jpeg', data: canvas.toDataURL('image/jpeg', 0.7) });
+      renderAttachments(); closeCameraModal(); showToast('Photo captured successfully.');
+    }
+    function triggerGalleryUpload() { document.getElementById('fileUploadInput').click(); }
+    function handleFileSelection(e) {
+      const files = e.target.files; if (!files || files.length === 0) return;
+      Array.from(files).forEach(file => {
+        if (file.size > 5 * 1024 * 1024) { showToast("File too large (Max 5MB)."); return; }
+        const reader = new FileReader();
+        reader.onload = function(evt) { appState.selectedFiles.push({ name: file.name, mimeType: file.type || 'image/jpeg', data: evt.target.result }); renderAttachments(); };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    }
+    function renderAttachments() {
+      const container = document.getElementById('attachmentsPreview'); container.innerHTML = '';
+      appState.selectedFiles.forEach((f, idx) => {
+        const card = document.createElement('div'); card.className = 'attachment-preview-card';
+        card.innerHTML = `<img src="${f.data}" alt="evidence"><button type="button" class="remove-attachment-btn" onclick="removeAttachment(${idx})"><i class="fa-solid fa-xmark"></i></button>`;
+        container.appendChild(card);
+      });
+    }
+    function removeAttachment(idx) { appState.selectedFiles.splice(idx, 1); renderAttachments(); }
+
+    // Form Submission
+    async function handleComplaintSubmit(e) {
+      e.preventDefault();
+      const formData = {
+        fullName: document.getElementById('fullName').value.trim(), mobile: document.getElementById('mobile').value.trim(),
+        relation: document.getElementById('relation').value, guardianName: document.getElementById('guardianName').value.trim(),
+        gramPanchayat: document.getElementById('gramPanchayat').value, village: document.getElementById('village').value.trim(),
+        category: document.getElementById('category').value, description: document.getElementById('description').value.trim(),
+        files: appState.selectedFiles
+      };
+      if (formData.mobile.length !== 10) { showToast('Please enter a valid 10-digit mobile number.'); return; }
+      const res = await callGAS('submitComplaint', { formData: formData });
+      if (res.success) {
+        document.getElementById('complaintForm').reset(); appState.selectedFiles = []; renderAttachments();
+        alert('Success!\n' + res.message);
+        document.getElementById('trackInput').value = res.complaintId; switchTab('track');
+        handleTrackSearch({ preventDefault: () => {} });
+      } else { alert('Error: ' + (res.error || 'Unknown error')); }
+    }
+
+    // Portal & Auth
+    function openLoginModal() { if (appState.currentUser) { switchTab('portal'); return; } document.getElementById('loginModal').style.display = 'flex'; }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+    function switchLoginMode(mode) {
+      const isOfficer = (mode === 'officer');
+      document.getElementById('tabBtnOfficer').classList.toggle('active', isOfficer);
+      document.getElementById('tabBtnAdmin').classList.toggle('active', !isOfficer);
+      document.getElementById('officerLoginForm').style.display = isOfficer ? 'block' : 'none';
+      document.getElementById('adminLoginForm').style.display = isOfficer ? 'none' : 'block';
+    }
+    async function handleOfficerLogin(e) {
+      e.preventDefault();
+      const res = await callGAS('officerLogin', { mobile: document.getElementById('loginMobile').value.trim(), pin: document.getElementById('loginPin').value.trim() });
+      if (res.success) { setLoggedInUser(res.user); closeLoginModal(); } else { alert(res.message); }
+    }
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const res = await callGAS('adminLogin', { password: document.getElementById('adminPassword').value });
+      if (res.success) { setLoggedInUser(res.user); closeLoginModal(); } else { alert(res.message); }
+    }
+    function setLoggedInUser(user) {
+      appState.currentUser = user; sessionStorage.setItem('gzl_user', JSON.stringify(user));
+      document.getElementById('loggedUserName').innerText = user.name;
+      document.getElementById('loggedUserRole').innerText = user.role;
+      document.getElementById('loggedUserDept').innerText = user.department || 'All Departments';
+      document.getElementById('auth-status-btn').innerHTML = `<i class="fa-solid fa-user"></i> <span>${user.name}</span>`;
+      document.getElementById('pTabBtnOfficers').style.display = (user.role === 'Admin') ? 'inline-block' : 'none';
+      document.getElementById('portalLoggedOut').style.display = 'none';
+      document.getElementById('portalLoggedIn').style.display = 'block';
+      switchTab('portal'); refreshOfficerComplaints(); loadOfficersListForAssign();
+    }
+    function checkSavedSession() {
+      const saved = sessionStorage.getItem('gzl_user');
+      if (saved) { try { setLoggedInUser(JSON.parse(saved)); } catch (e) { sessionStorage.removeItem('gzl_user'); } }
+    }
+    function handleLogout() {
+      appState.currentUser = null; sessionStorage.removeItem('gzl_user');
+      document.getElementById('auth-status-btn').innerHTML = `<i class="fa-solid fa-user-shield"></i> <span>Officer Login</span>`;
+      document.getElementById('portalLoggedOut').style.display = 'block';
+      document.getElementById('portalLoggedIn').style.display = 'none';
+      switchTab('new'); showToast('Logged out successfully.');
+    }
+    async function refreshOfficerComplaints() {
+      const res = await callGAS('getAllComplaints', {});
+      if (res.success) { appState.cachedComplaints = res.data; applyPortalFilters(); }
+    }
+    function applyPortalFilters() {
+      const status = document.getElementById('filterStatus').value;
+      const gp = document.getElementById('filterGP').value;
+      const dept = document.getElementById('filterDepartment').value;
+      const search = document.getElementById('filterSearch').value.toLowerCase().trim();
+      const filtered = appState.cachedComplaints.filter(c => {
+        if (status !== 'All' && String(c.Status).toLowerCase() !== status.toLowerCase()) return false;
+        if (gp !== 'All' && String(c.GramPanchayat).toLowerCase() !== gp.toLowerCase()) return false;
+        if (dept !== 'All' && String(c.AssignedDepartment).toLowerCase() !== dept.toLowerCase()) return false;
+        if (search) {
+          const str = [c.ComplaintID, c.FullName, c.Mobile, c.Village, c.Description, c.AssignedOfficer, c.AssignedDepartment].join(' ').toLowerCase();
+          if (!str.includes(search)) return false;
+        }
+        return true;
+      });
+      document.getElementById('portalFilteredCount').innerText = filtered.length;
+      renderPortalTable(filtered);
+    }
+    function renderPortalTable(complaints) {
+      const tbody = document.getElementById('portalComplaintsTableBody');
+      if (complaints.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="text-center">No grievances match the filter criteria.</td></tr>`; return; }
+      let html = '';
+      complaints.forEach(c => {
+        const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+        html += `<tr><td><strong>${c.ComplaintID}</strong></td><td>${c.Date}</td><td>${c.FullName}<br><small style="color:var(--text-muted);">${c.Mobile}</small></td><td>${c.GramPanchayat}<br><small>${c.Village}</small></td><td><strong>${c.Category}</strong><br><small style="color:var(--text-muted);">${(c.Description || '').substring(0, 30)}...</small></td><td>${c.AssignedDepartment ? `<span class="badge-dept">${c.AssignedDepartment}</span><br>` : ''}<small style="font-weight:600; color:var(--text-secondary);">${c.AssignedOfficer || 'Unassigned'}</small></td><td><span class="complaint-badge ${statusClass}">${c.Status}</span></td><td><button class="btn btn-primary btn-sm" onclick="openActionModal('${c.ComplaintID}', '${c.Status}', '${c.AssignedDepartment || ''}', '${c.AssignedOfficer || ''}')"><i class="fa-solid fa-pen-to-square"></i> Action</button></td></tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    async function loadOfficersListForAssign() {
+      const res = await callGAS('getAllOfficers', {}, false);
+      if (res.success) {
+        appState.cachedOfficers = res.data;
+        const officerSelect = document.getElementById('assignOfficerSelect');
+        officerSelect.innerHTML = '<option value="">Select Officer...</option>';
+        res.data.forEach(o => { if (String(o.Status).toLowerCase() === 'active') officerSelect.add(new Option(`${o.Name} (${o.Role} - ${o.Department})`, o.Name)); });
+      }
+    }
+    function openActionModal(id, currentStatus, currentDept, currentOfficer) {
+      document.getElementById('actionComplaintId').value = id;
+      document.getElementById('actionDisplayId').value = id;
+      document.getElementById('updateStatusSelect').value = currentStatus || 'Pending';
+      document.getElementById('assignDepartmentSelect').value = currentDept || '';
+      document.getElementById('assignOfficerSelect').value = currentOfficer || '';
+      document.getElementById('updateActionTaken').value = '';
+      document.getElementById('updateRemarks').value = '';
+      document.getElementById('actionModal').style.display = 'flex';
+    }
+    function closeActionModal() { document.getElementById('actionModal').style.display = 'none'; }
+    async function handleActionUpdateSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('actionComplaintId').value;
+      const status = document.getElementById('updateStatusSelect').value;
+      const dept = document.getElementById('assignDepartmentSelect').value;
+      const officer = document.getElementById('assignOfficerSelect').value;
+      const action = document.getElementById('updateActionTaken').value.trim();
+      const remarks = document.getElementById('updateRemarks').value.trim();
+      const updater = appState.currentUser ? appState.currentUser.name : 'Officer';
+      const res = await callGAS('updateComplaintStatus', { id: id, status: status, action: action, remarks: remarks, updater: updater, officer: officer, dept: dept });
+      if (res.success) { closeActionModal(); showToast(res.message); refreshOfficerComplaints(); } else { alert(res.message || res.error); }
+    }
+
+    async function loadOfficersTable() {
+      const res = await callGAS('getAllOfficers', {});
+      if (!res.success) return;
+      appState.cachedOfficers = res.data;
+      const tbody = document.getElementById('officersTableBody');
+      if (res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="text-center">No officers registered.</td></tr>'; return; }
+      let html = '';
+      res.data.forEach(o => {
+        const isActive = (String(o.Status).toLowerCase() === 'active');
+        html += `<tr><td><strong>${o.UserID}</strong></td><td>${o.Name}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${o.Department}</span></td><td>${o.GPAssigned}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+    function openCreateOfficerModal() { document.getElementById('createOfficerModal').style.display = 'flex'; }
+    function closeCreateOfficerModal() { document.getElementById('createOfficerModal').style.display = 'none'; }
+    async function handleCreateOfficerSubmit(e) {
+      e.preventDefault();
+      const officerData = {
+        name: document.getElementById('newOfficerName').value.trim(), mobile: document.getElementById('newOfficerMobile').value.trim(),
+        pin: document.getElementById('newOfficerPin').value.trim(), role: document.getElementById('newOfficerRole').value,
+        gpAssigned: document.getElementById('newOfficerGP').value, department: document.getElementById('newOfficerDept').value
+      };
+      const res = await callGAS('createOfficer', { officerData: officerData, createdBy: appState.currentUser ? appState.currentUser.name : 'Admin' });
+      if (res.success) { document.getElementById('createOfficerForm').reset(); closeCreateOfficerModal(); alert(res.message); loadOfficersTable(); loadOfficersListForAssign(); } else { alert('Error: ' + res.error); }
+    }
+    async function toggleOfficerStatus(userId, newStatus) {
+      const res = await callGAS('toggleOfficerStatus', { userId: userId, newStatus: newStatus });
+      showToast(res.message); loadOfficersTable(); loadOfficersListForAssign();
+    }
+
+    // UI Helpers
+    function showLoader(msg) { document.getElementById('loadingMessage').innerText = msg || 'Loading...'; document.getElementById('loadingOverlay').style.display = 'flex'; }
+    function hideLoader() { document.getElementById('loadingOverlay').style.display = 'none'; }
+    function showToast(msg) { const toast = document.getElementById('appToast'); toast.innerText = msg; toast.style.display = 'block'; setTimeout(() => { toast.style.display = 'none'; }, 3500); }
+  </script>
+</body>
+</html>

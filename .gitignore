@@ -1,0 +1,7 @@
+*.apk
+*.jks
+dummy/platforms/
+dummy/plugins/
+dummy/node_modules/
+icon.png
+logo.jpeg

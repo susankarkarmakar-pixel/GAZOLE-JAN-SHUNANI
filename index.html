@@ -147,26 +147,15 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <div class="header-container">
 <div class="brand-wrapper">
 <div class="gov-emblem"><i class="fa-solid fa-landmark-dome"></i></div>
-<div class="brand-text">
-<h1>GAZOLE JAN SHUNANI</h1>
-<p>Public Grievance Redressal Portal | Gazole Development Block</p>
+<div class="brand-text"><h1>GAZOLE JAN SHUNANI</h1><p>Public Grievance Redressal Portal | Gazole Development Block</p></div>
 </div>
-</div>
-<div class="header-actions">
-<button id="auth-status-btn" class="header-btn" onclick="openLoginModal()">
-<i class="fa-solid fa-user-shield"></i> <span>Officer Login</span>
-</button>
-</div>
+<div class="header-actions"><button id="auth-status-btn" class="header-btn" onclick="openLoginModal()"><i class="fa-solid fa-user-shield"></i> <span>Officer Login</span></button></div>
 </div>
 </header>
 
 <main class="app-main">
-<!-- TAB 1: NEW COMPLAINT -->
 <section id="tab-new" class="tab-view active">
-<div class="view-header">
-<h2>Register New Grievance</h2>
-<p>Submit your complaint directly to the Block Administration for speedy redressal.</p>
-</div>
+<div class="view-header"><h2>Register New Grievance</h2><p>Submit your complaint directly to the Block Administration for speedy redressal.</p></div>
 <div class="form-card">
 <form id="complaintForm" onsubmit="handleComplaintSubmit(event)">
 <div class="form-section">
@@ -213,12 +202,8 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 </div>
 </section>
 
-<!-- TAB 2: TRACK STATUS -->
 <section id="tab-track" class="tab-view">
-<div class="view-header">
-<h2>Track Grievance Status</h2>
-<p>Search using your <strong>10-digit Mobile Number</strong> or <strong>Complaint ID</strong> to view your grievance progress.</p>
-</div>
+<div class="view-header"><h2>Track Grievance Status</h2><p>Search using your <strong>10-digit Mobile Number</strong> or <strong>Complaint ID</strong> to view your grievance progress.</p></div>
 <div class="track-search-card">
 <form onsubmit="handleTrackSearch(event)" class="search-form">
 <div style="display:flex; gap:8px;">
@@ -230,7 +215,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <div id="trackResultContainer"><div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>Type your 10-digit Mobile Number or Complaint ID above to view live progress.</p></div></div>
 </section>
 
-<!-- TAB 3: PORTAL (Admin/Officer) -->
 <section id="tab-portal" class="tab-view">
 <div id="portalLoggedOut" style="text-align:center; padding:40px;">
 <div style="font-size:48px; color:var(--primary); margin-bottom:16px;"><i class="fa-solid fa-user-lock"></i></div>
@@ -239,7 +223,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <button class="btn btn-primary btn-lg" onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Sign In to Portal</button>
 </div>
 <div id="portalLoggedIn" style="display: none;">
-<!-- Admin Dashboard Stats -->
 <div id="adminDashboardStats" style="display:none;">
 <div class="view-header"><h2>Admin Dashboard</h2><p>Overview of all grievances</p></div>
 <div class="stats-grid">
@@ -284,7 +267,6 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 </div>
 </section>
 
-<!-- SUCCESS PAGE -->
 <section id="successPage" style="display: none; padding: 20px; text-align: center;">
 <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
 <div style="width: 80px; height: 80px; background: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;"><i class="fa-solid fa-check" style="font-size: 40px; color: white;"></i></div>
@@ -302,14 +284,12 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 </section>
 </main>
 
-<!-- Bottom Navigation - 3 tabs only -->
 <nav class="bottom-nav">
 <button class="nav-item active" onclick="switchTab('new')"><i class="fa-solid fa-pen-to-square"></i><span>New Entry</span></button>
 <button class="nav-item" onclick="switchTab('track')"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Track</span></button>
 <button class="nav-item" onclick="switchTab('portal')"><i class="fa-solid fa-user-tie"></i><span>Portal</span></button>
 </nav>
 
-<!-- Modals -->
 <div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body" style="text-align: center;"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p style="margin: 12px 0; color: var(--text-muted); font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Camera opens inside the app.</p><div style="display: flex; justify-content: center; margin-top: 16px;"><button type="button" class="btn-capture" onclick="takeSnapshot()" title="Capture Photo"><i class="fa-solid fa-camera-retro"></i></button></div></div></div></div>
 
 <div id="loginModal" class="app-modal"><div class="modal-dialog modal-sm"><div class="modal-header"><h3><i class="fa-solid fa-shield-halved"></i> Sign In to Portal</h3><button type="button" class="modal-close" onclick="closeLoginModal()">&times;</button></div><div class="modal-body"><div class="login-tabs"><button type="button" id="tabBtnOfficer" class="login-tab-btn active" onclick="switchLoginMode('officer')">Officer Login</button><button type="button" id="tabBtnAdmin" class="login-tab-btn" onclick="switchLoginMode('admin')">Admin Login</button></div><form id="officerLoginForm" onsubmit="handleOfficerLogin(event)"><div class="form-group"><label for="loginMobile">Mobile Number</label><input type="tel" id="loginMobile" maxlength="10" placeholder="10-digit registered mobile" required></div><div class="form-group"><label for="loginPin">Security PIN</label><input type="password" id="loginPin" maxlength="6" placeholder="Enter PIN" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Officer</button></form><form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display: none;"><div class="form-group"><label for="adminPassword">Master Password</label><input type="password" id="adminPassword" placeholder="Enter BDO admin password" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Admin</button></form></div></div></div>
@@ -528,7 +508,6 @@ modal.style.display = 'flex';
 hideLoader();
 }
 
-// Dashboard থেকে Action Modal ওপেন করার ফাংশন
 function openActionModalFromDashboard(id, currentStatus, currentDept, currentOfficer) {
 closeDashboardExplorer();
 setTimeout(() => {
@@ -536,7 +515,6 @@ openActionModal(id, currentStatus, currentDept, currentOfficer);
 }, 300);
 }
 
-// Complaint Details দেখার ফাংশন
 async function viewComplaintDetails(complaintId) {
 closeDashboardExplorer();
 showLoader('Loading complaint details...');
@@ -729,7 +707,6 @@ document.getElementById('loggedUserDept').innerText = user.department || 'All De
 document.getElementById('auth-status-btn').innerHTML = `<i class="fa-solid fa-user"></i> <span>${user.name}</span>`;
 document.getElementById('pTabBtnOfficers').style.display = (user.role === 'Admin') ? 'inline-block' : 'none';
 
-// Admin হলে Dashboard Stats দেখাও
 if (user.role === 'Admin') {
 document.getElementById('adminDashboardStats').style.display = 'block';
 loadDashboardStats();
@@ -796,7 +773,14 @@ if (res.success) {
 appState.cachedOfficers = res.data;
 const officerSelect = document.getElementById('assignOfficerSelect');
 officerSelect.innerHTML = '<option value="">Select Officer...</option>';
-res.data.forEach(o => { if (String(o.Status).toLowerCase() === 'active') officerSelect.add(new Option(`${o.Name} (${o.Role} - ${o.Department})`, o.Name)); });
+res.data.forEach(o => { 
+if (String(o.Status).toLowerCase() === 'active') { 
+const officerName = o.Name || 'Unknown';
+const officerRole = o.Role || 'Officer';
+const officerDept = o.Department || 'Not Assigned';
+officerSelect.add(new Option(`${officerName} (${officerRole} - ${officerDept})`, officerName));
+}
+});
 }
 }
 function openActionModal(id, currentStatus, currentDept, currentOfficer) {
@@ -834,7 +818,9 @@ if (res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-
 let html = '';
 res.data.forEach(o => {
 const isActive = (String(o.Status).toLowerCase() === 'active');
-html += `<tr><td><strong>${o.UserID}</strong></td><td>${o.Name}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${o.Department}</span></td><td>${o.Category || 'All'}</td><td>${o.SubCategory || 'All'}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
+const officerName = o.Name || 'Unknown';
+const officerDept = o.Department || 'Not Assigned';
+html += `<tr><td><strong>${o.UserID}</strong></td><td>${officerName}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${officerDept}</span></td><td>${o.Category || 'All'}</td><td>${o.SubCategory || 'All'}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
 });
 tbody.innerHTML = html;
 }

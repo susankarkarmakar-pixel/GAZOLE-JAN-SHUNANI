@@ -147,16 +147,26 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <div class="header-container">
 <div class="brand-wrapper">
 <div class="gov-emblem"><i class="fa-solid fa-landmark-dome"></i></div>
-<div class="brand-text"><h1>GAZOLE JAN SHUNANI</h1><p>Public Grievance Redressal Portal | Gazole Development Block</p></div>
+<div class="brand-text">
+<h1>GAZOLE JAN SHUNANI</h1>
+<p>Public Grievance Redressal Portal | Gazole Development Block</p>
 </div>
-<div class="header-actions"><button id="auth-status-btn" class="header-btn" onclick="openLoginModal()"><i class="fa-solid fa-user-shield"></i> <span>Officer Login</span></button></div>
+</div>
+<div class="header-actions">
+<button id="auth-status-btn" class="header-btn" onclick="openLoginModal()">
+<i class="fa-solid fa-user-shield"></i> <span>Officer Login</span>
+</button>
+</div>
 </div>
 </header>
 
 <main class="app-main">
 <!-- TAB 1: NEW COMPLAINT -->
 <section id="tab-new" class="tab-view active">
-<div class="view-header"><h2>Register New Grievance</h2><p>Submit your complaint directly to the Block Administration for speedy redressal.</p></div>
+<div class="view-header">
+<h2>Register New Grievance</h2>
+<p>Submit your complaint directly to the Block Administration for speedy redressal.</p>
+</div>
 <div class="form-card">
 <form id="complaintForm" onsubmit="handleComplaintSubmit(event)">
 <div class="form-section">
@@ -205,7 +215,10 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 
 <!-- TAB 2: TRACK STATUS -->
 <section id="tab-track" class="tab-view">
-<div class="view-header"><h2>Track Grievance Status</h2><p>Search using your <strong>10-digit Mobile Number</strong> or <strong>Complaint ID</strong> to view your grievance progress.</p></div>
+<div class="view-header">
+<h2>Track Grievance Status</h2>
+<p>Search using your <strong>10-digit Mobile Number</strong> or <strong>Complaint ID</strong> to view your grievance progress.</p>
+</div>
 <div class="track-search-card">
 <form onsubmit="handleTrackSearch(event)" class="search-form">
 <div style="display:flex; gap:8px;">
@@ -486,13 +499,91 @@ else {
 let html = '';
 res.data.forEach(c => {
 const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
-html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
+html += `<div class="complaint-result-card" style="margin-top:0;">
+<div class="result-header">
+<div>
+<strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong>
+<span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span>
+</div>
+<span class="complaint-badge ${statusClass}">${c.Status}</span>
+</div>
+<p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p>
+<p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p>
+<p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p>
+<p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>
+${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}
+<div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+<button class="btn btn-primary btn-sm" onclick="openActionModalFromDashboard('${c.ComplaintID}', '${c.Status}', '${c.AssignedDepartment || ''}', '${c.AssignedOfficer || ''}')">
+<i class="fa-solid fa-pen-to-square"></i> Take Action
+</button>
+<button class="btn btn-outline btn-sm" onclick="viewComplaintDetails('${c.ComplaintID}')">
+<i class="fa-solid fa-eye"></i> View Details
+</button>
+</div>
+</div>`;
 });
 container.innerHTML = html;
 }
 modal.style.display = 'flex';
 hideLoader();
 }
+
+// Dashboard থেকে Action Modal ওপেন করার ফাংশন
+function openActionModalFromDashboard(id, currentStatus, currentDept, currentOfficer) {
+closeDashboardExplorer();
+setTimeout(() => {
+openActionModal(id, currentStatus, currentDept, currentOfficer);
+}, 300);
+}
+
+// Complaint Details দেখার ফাংশন
+async function viewComplaintDetails(complaintId) {
+closeDashboardExplorer();
+showLoader('Loading complaint details...');
+const res = await callGAS('trackComplaint', { query: complaintId });
+hideLoader();
+if (res.success && res.data && res.data.length > 0) {
+const c = res.data[0];
+const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+const modal = document.getElementById('dashboardExplorerModal');
+const container = document.getElementById('explorerComplaintsContainer');
+document.getElementById('explorerModalTitle').innerHTML = `<i class="fa-solid fa-file-lines"></i> Complaint Details: ${c.ComplaintID}`;
+container.innerHTML = `
+<div class="complaint-result-card">
+<div class="result-header">
+<div>
+<h3 style="color:var(--primary); font-weight:800;">${c.ComplaintID}</h3>
+<small style="color:var(--text-secondary);">${c.Date} at ${c.Time}</small>
+</div>
+<span class="complaint-badge ${statusClass}">${c.Status}</span>
+</div>
+<div style="margin-bottom:12px;">
+<p><strong>Complainant:</strong> ${c.FullName} (${c.Relation || 'S/O'} ${c.GuardianName || 'N/A'})</p>
+<p><strong>Mobile Number:</strong> ${c.Mobile}</p>
+<p><strong>Location:</strong> Vill. ${c.Village}, GP: ${c.GramPanchayat}</p>
+${c.Mouza ? `<p><strong>Mouza:</strong> ${c.Mouza} (JL: ${c.JLNo || 'N/A'})</p>` : ''}
+<p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p>
+<p style="margin-top:6px; background:var(--bg-main); padding:8px 12px; border-radius:6px;"><strong>Issue:</strong> ${c.Description}</p>
+</div>
+<div class="timeline-step">
+<strong>Current Status: ${c.Status}</strong>
+${c.AssignedDepartment ? `<p style="font-size:13px; color:var(--primary); font-weight:600;">Tagged Dept: ${c.AssignedDepartment}</p>` : ''}
+${c.AssignedOfficer ? `<p style="font-size:13px; color:var(--secondary); font-weight:600;">Assigned Officer: ${c.AssignedOfficer}</p>` : ''}
+<p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${c.ActionTaken ? 'Action Taken: ' + c.ActionTaken : 'Pending administrative action.'}</p>
+${c.Remarks ? `<p style="font-size:12px; color:var(--text-muted);">Remarks: ${c.Remarks}</p>` : ''}
+</div>
+<div style="margin-top:16px; display:flex; gap:8px;">
+<button class="btn btn-primary btn-sm" onclick="openActionModalFromDashboard('${c.ComplaintID}', '${c.Status}', '${c.AssignedDepartment || ''}', '${c.AssignedOfficer || ''}')">
+<i class="fa-solid fa-pen-to-square"></i> Take Action
+</button>
+</div>
+</div>`;
+modal.style.display = 'flex';
+} else {
+showToast('Could not load complaint details');
+}
+}
+
 function closeDashboardExplorer() { document.getElementById('dashboardExplorerModal').style.display = 'none'; }
 
 function openCameraModal() {
@@ -547,7 +638,7 @@ function removeAttachment(idx) { appState.selectedFiles.splice(idx, 1); renderAt
 async function handleComplaintSubmit(e) {
 e.preventDefault();
 if (appState.selectedFiles.length === 0) {
-showToast('⚠️ Site Photo is mandatory! Please capture or upload a photo.');
+showToast('️ Site Photo is mandatory! Please capture or upload a photo.');
 const evidenceBox = document.querySelector('.evidence-box');
 evidenceBox.style.borderColor = 'var(--danger)'; evidenceBox.style.background = '#FEF2F2';
 setTimeout(() => { evidenceBox.style.borderColor = ''; evidenceBox.style.background = ''; }, 3000);

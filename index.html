@@ -189,7 +189,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <div class="form-section">
 <div class="section-title"><span class="step-num">4</span><h3>Site Photo / Supporting Documents <span class="required">*</span></h3></div>
 <div class="evidence-box" id="evidenceBox">
-<p class="evidence-hint"><i class="fa-solid fa-circle-exclamation" style="color: var(--danger);"></i> At least one photo is mandatory for grievance submission. <span style="background:var(--danger);color:white;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">MANDATORY</span></p>
+<p class="evidence-hint"><i class="fa-solid fa-circle-exclamation" style="color: var(--danger);"></i> At least one photo is mandatory. <span style="background:var(--danger);color:white;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;">MANDATORY</span></p>
 <div class="action-buttons-group">
 <button type="button" class="btn btn-secondary" onclick="openCameraModal()"><i class="fa-solid fa-camera"></i> Open Camera</button>
 <button type="button" class="btn btn-outline" onclick="triggerGalleryUpload()"><i class="fa-solid fa-images"></i> Upload from Gallery</button>
@@ -205,7 +205,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 
 <!-- TAB 2: TRACK STATUS -->
 <section id="tab-track" class="tab-view">
-<div class="view-header"><h2>Track Grievance Status</h2><p>Search using your <strong>10-digit Mobile Number</strong> or <strong>Complaint ID</strong> to view your grievance progress and action taken report.</p></div>
+<div class="view-header"><h2>Track Grievance Status</h2><p>Search using your <strong>10-digit Mobile Number</strong> or <strong>Complaint ID</strong> to view your grievance progress.</p></div>
 <div class="track-search-card">
 <form onsubmit="handleTrackSearch(event)" class="search-form">
 <div style="display:flex; gap:8px;">
@@ -217,7 +217,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <div id="trackResultContainer"><div class="empty-state"><i class="fa-solid fa-file-circle-question"></i><p>Type your 10-digit Mobile Number or Complaint ID above to view live progress.</p></div></div>
 </section>
 
-<!-- TAB 3: PORTAL (Admin/Officer Only) -->
+<!-- TAB 3: PORTAL (Admin/Officer) -->
 <section id="tab-portal" class="tab-view">
 <div id="portalLoggedOut" style="text-align:center; padding:40px;">
 <div style="font-size:48px; color:var(--primary); margin-bottom:16px;"><i class="fa-solid fa-user-lock"></i></div>
@@ -226,6 +226,22 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <button class="btn btn-primary btn-lg" onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Sign In to Portal</button>
 </div>
 <div id="portalLoggedIn" style="display: none;">
+<!-- Admin Dashboard Stats -->
+<div id="adminDashboardStats" style="display:none;">
+<div class="view-header"><h2>Admin Dashboard</h2><p>Overview of all grievances</p></div>
+<div class="stats-grid">
+<div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'All', 'All Complaints')"><div class="stat-icon orange"><i class="fa-solid fa-inbox"></i></div><div class="stat-content"><span class="stat-value" id="statTotal">0</span><span class="stat-label">Total Grievances</span></div></div>
+<div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'Resolved', 'Resolved Complaints')"><div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div><div class="stat-content"><span class="stat-value" id="statResolved">0</span><span class="stat-label">Resolved</span></div></div>
+<div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'Pending', 'Pending Complaints')"><div class="stat-icon yellow"><i class="fa-solid fa-clock"></i></div><div class="stat-content"><span class="stat-value" id="statPending">0</span><span class="stat-label">Pending Review</span></div></div>
+<div class="stat-card clickable" onclick="handleDashboardCardClick('status', 'In Progress', 'In Progress Complaints')"><div class="stat-icon blue"><i class="fa-solid fa-spinner"></i></div><div class="stat-content"><span class="stat-value" id="statInProgress">0</span><span class="stat-label">In Progress</span></div></div>
+</div>
+<div class="dashboard-breakdown-grid">
+<div class="breakdown-card"><h3><i class="fa-solid fa-layer-group"></i> Category-wise Distribution</h3><div id="categoryStatsList" class="breakdown-list"></div></div>
+<div class="breakdown-card"><h3><i class="fa-solid fa-map-location-dot"></i> Gram Panchayat Summary</h3><div id="gpStatsList" class="breakdown-list"></div></div>
+</div>
+<hr style="margin:24px 0; border:none; border-top:1px solid var(--border);">
+</div>
+
 <div class="portal-user-bar">
 <div class="user-info"><i class="fa-solid fa-circle-user" style="font-size:24px; color:var(--primary);"></i><div><strong id="loggedUserName">Officer Name</strong><br><span id="loggedUserRole" class="complaint-badge badge-assigned">Role</span> <span id="loggedUserDept" class="badge-dept">Department</span></div></div>
 <div><button class="btn btn-outline btn-sm" onclick="refreshOfficerComplaints()"><i class="fa-solid fa-rotate"></i> Refresh</button> <button class="btn btn-danger btn-sm" onclick="handleLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button></div>
@@ -265,7 +281,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">YOUR COMPLAINT ID / আপনার অভিযোগ আইডি</p>
 <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;"><h3 id="successComplaintId" style="font-size: 24px; color: var(--primary); font-weight: 800; letter-spacing: 1px; word-break: break-all;">GJS-2023-89021</h3><button onclick="copyComplaintId()" style="background: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text-secondary);"><i class="fa-regular fa-copy"></i></button></div>
 </div>
-<div style="background: #EFF6FF; border-left: 4px solid var(--accent); padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: left;"><p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;"><i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>Please save this ID. You can track your grievance status using this ID.<br><br>অনুগ্রহ করে এই আইডি সংরক্ষণ করুন। আপনি এই আইডি ব্যবহার করে আপনার অভিযোগের অবস্থা ট্র্যাক করতে পারবেন।</p></div>
+<div style="background: #EFF6FF; border-left: 4px solid var(--accent); padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: left;"><p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;"><i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>Please save this ID. You can track your grievance status using this ID.<br><br>অনুগ্রহ করে এই আইডি সংরক্ষণ করুন।</p></div>
 <button onclick="downloadAcknowledgement()" class="btn btn-outline btn-block" style="margin-bottom: 12px; padding: 14px;"><i class="fa-solid fa-download"></i> DOWNLOAD ACKNOWLEDGEMENT</button>
 <button onclick="submitAnotherComplaint()" class="btn btn-primary btn-block btn-lg" style="margin-bottom: 12px;">SUBMIT ANOTHER COMPLAINT</button>
 <button onclick="returnToHome()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; text-decoration: underline; padding: 8px;">Return to Home / মূল পাতায় ফিরে যান</button>
@@ -273,7 +289,7 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 </section>
 </main>
 
-<!-- Bottom Navigation - Citizen View (Only 2 tabs) -->
+<!-- Bottom Navigation - 3 tabs only -->
 <nav class="bottom-nav">
 <button class="nav-item active" onclick="switchTab('new')"><i class="fa-solid fa-pen-to-square"></i><span>New Entry</span></button>
 <button class="nav-item" onclick="switchTab('track')"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Track</span></button>
@@ -281,10 +297,16 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--p
 </nav>
 
 <!-- Modals -->
-<div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body" style="text-align: center;"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p style="margin: 12px 0; color: var(--text-muted); font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Camera opens inside the app — your form remains intact.</p><div style="display: flex; justify-content: center; margin-top: 16px;"><button type="button" class="btn-capture" onclick="takeSnapshot()" title="Capture Photo"><i class="fa-solid fa-camera-retro"></i></button></div></div></div></div>
+<div id="cameraModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-camera"></i> Capture Site Photo</h3><button type="button" class="modal-close" onclick="closeCameraModal()">&times;</button></div><div class="modal-body" style="text-align: center;"><div class="camera-stream-wrapper"><video id="cameraVideo" autoplay playsinline></video><canvas id="cameraCanvas" style="display: none;"></canvas></div><p style="margin: 12px 0; color: var(--text-muted); font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Camera opens inside the app.</p><div style="display: flex; justify-content: center; margin-top: 16px;"><button type="button" class="btn-capture" onclick="takeSnapshot()" title="Capture Photo"><i class="fa-solid fa-camera-retro"></i></button></div></div></div></div>
+
 <div id="loginModal" class="app-modal"><div class="modal-dialog modal-sm"><div class="modal-header"><h3><i class="fa-solid fa-shield-halved"></i> Sign In to Portal</h3><button type="button" class="modal-close" onclick="closeLoginModal()">&times;</button></div><div class="modal-body"><div class="login-tabs"><button type="button" id="tabBtnOfficer" class="login-tab-btn active" onclick="switchLoginMode('officer')">Officer Login</button><button type="button" id="tabBtnAdmin" class="login-tab-btn" onclick="switchLoginMode('admin')">Admin Login</button></div><form id="officerLoginForm" onsubmit="handleOfficerLogin(event)"><div class="form-group"><label for="loginMobile">Mobile Number</label><input type="tel" id="loginMobile" maxlength="10" placeholder="10-digit registered mobile" required></div><div class="form-group"><label for="loginPin">Security PIN</label><input type="password" id="loginPin" maxlength="6" placeholder="Enter PIN" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Officer</button></form><form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display: none;"><div class="form-group"><label for="adminPassword">Master Password</label><input type="password" id="adminPassword" placeholder="Enter BDO admin password" required></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Sign In as Admin</button></form></div></div></div>
+
 <div id="actionModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-clipboard-check"></i> Action & Officer Assignment</h3><button type="button" class="modal-close" onclick="closeActionModal()">&times;</button></div><div class="modal-body"><form id="actionUpdateForm" onsubmit="handleActionUpdateSubmit(event)"><input type="hidden" id="actionComplaintId"><div class="form-group"><label>Complaint ID</label><input type="text" id="actionDisplayId" readonly class="input-readonly"></div><div class="form-grid"><div class="form-group"><label for="updateStatusSelect">Update Status <span class="required">*</span></label><select id="updateStatusSelect" required><option value="Pending">Pending</option><option value="Assigned">Assigned</option><option value="In Progress">In Progress</option><option value="Resolved">Resolved</option><option value="Closed">Closed</option><option value="Not Sustainable/Not Admissible">Not Sustainable/Not Admissible</option><option value="Matter taken up (upto 90 days)">Matter taken up (upto 90 days)</option><option value="Matter taken up (beyond 90 days)">Matter taken up (beyond 90 days)</option><option value="Service Provided/Benefited">Service Provided/Benefited</option><option value="Under Process">Under Process</option><option value="Beyond Administrative Jurisdiction">Beyond Administrative Jurisdiction</option></select></div><div class="form-group"><label for="assignDepartmentSelect">Tag Department</label><select id="assignDepartmentSelect"><option value="">Select Department...</option></select></div></div><div class="form-group"><label for="assignOfficerSelect">Assign Officer</label><select id="assignOfficerSelect"><option value="">Select Officer...</option></select></div><div class="form-group"><label for="updateActionTaken">Action Taken Description</label><textarea id="updateActionTaken" rows="3" placeholder="Enter field inquiry details or resolution..."></textarea></div><div class="form-group"><label for="updateRemarks">Official Remarks</label><input type="text" id="updateRemarks" placeholder="Optional notes"></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Save Status & Tagging</button></form></div></div></div>
+
 <div id="createOfficerModal" class="app-modal"><div class="modal-dialog"><div class="modal-header"><h3><i class="fa-solid fa-user-plus"></i> Register New Officer</h3><button type="button" class="modal-close" onclick="closeCreateOfficerModal()">&times;</button></div><div class="modal-body"><form id="createOfficerForm" onsubmit="handleCreateOfficerSubmit(event)"><div class="form-group"><label for="newOfficerName">Officer Full Name <span class="required">*</span></label><input type="text" id="newOfficerName" required></div><div class="form-grid"><div class="form-group"><label for="newOfficerMobile">Mobile (Login ID) <span class="required">*</span></label><input type="tel" id="newOfficerMobile" maxlength="10" required pattern="[0-9]{10}"></div><div class="form-group"><label for="newOfficerPin">Security PIN <span class="required">*</span></label><input type="password" id="newOfficerPin" maxlength="6" required></div></div><div class="form-grid"><div class="form-group"><label for="newOfficerRole">Officer Role</label><select id="newOfficerRole"><option value="Officer">Officer</option><option value="Nirman Sahayak">Nirman Sahayak</option><option value="GP Secretary">GP Secretary</option><option value="Executive Assistant">Executive Assistant</option><option value="Supervisor">Supervisor</option><option value="Admin">Admin</option></select></div><div class="form-group"><label for="newOfficerGP">Assigned GP</label><select id="newOfficerGP"><option value="All">All Gram Panchayats</option></select></div></div><div class="form-group"><label for="newOfficerDept">Tagged Department <span class="required">*</span></label><select id="newOfficerDept" required><option value="">Select Department...</option></select></div><div class="form-group"><label for="newOfficerCategory">Tagged Category</label><select id="newOfficerCategory"><option value="All">All Categories</option></select></div><div class="form-group"><label for="newOfficerSubCategory">Tagged Sub-Category</label><select id="newOfficerSubCategory"><option value="All">All Sub-Categories</option></select></div><button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Create Officer Account</button></form></div></div></div>
+
+<div id="dashboardExplorerModal" class="app-modal"><div class="modal-dialog modal-lg"><div class="modal-header"><h3 id="explorerModalTitle"><i class="fa-solid fa-folder-open"></i> Grievance Records</h3><button type="button" class="modal-close" onclick="closeDashboardExplorer()">&times;</button></div><div class="modal-body" style="max-height: 75vh; overflow-y: auto;"><div id="explorerComplaintsContainer" class="dashboard-filtered-grid"></div></div></div></div>
+
 <div id="appToast" class="app-toast"></div>
 <div id="loadingOverlay" class="loading-overlay" style="display: none;"><div class="spinner-box"><div class="app-spinner"></div><p id="loadingMessage">Loading...</p></div></div>
 
@@ -402,7 +424,10 @@ document.querySelectorAll('.bottom-nav .nav-item').forEach((btn, idx) => {
 const tabs = ['new', 'track', 'portal'];
 btn.classList.toggle('active', tabs[idx] === tabId);
 });
-if (tabId === 'portal' && appState.currentUser) refreshOfficerComplaints();
+if (tabId === 'portal' && appState.currentUser) {
+refreshOfficerComplaints();
+if (appState.currentUser.role === 'Admin') loadDashboardStats();
+}
 }
 function switchPortalSubTab(subTab) {
 appState.portalSubTab = subTab;
@@ -431,6 +456,44 @@ html += `<div class="complaint-result-card"><div class="result-header"><div><h3 
 });
 container.innerHTML = html;
 }
+
+async function loadDashboardStats() {
+const res = await callGAS('getDashboardStats', {}, false);
+if (!res.success) return;
+const d = res.data;
+document.getElementById('statTotal').innerText = d.total || 0;
+document.getElementById('statResolved').innerText = d.resolved || 0;
+document.getElementById('statPending').innerText = d.pending || 0;
+document.getElementById('statInProgress').innerText = d.inProgress || 0;
+const catList = document.getElementById('categoryStatsList'); catList.innerHTML = '';
+Object.keys(d.byCategory || {}).forEach(k => { catList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('category', '${k}', '${k} Grievances')"><span><i class="fa-solid fa-folder-open" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byCategory[k]}</strong></div>`; });
+const gpList = document.getElementById('gpStatsList'); gpList.innerHTML = '';
+Object.keys(d.byGP || {}).forEach(k => { gpList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('gp', '${k}', '${k} GP Grievances')"><span><i class="fa-solid fa-location-dot" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byGP[k]}</strong></div>`; });
+}
+
+async function handleDashboardCardClick(filterType, filterValue, title) {
+showLoader('Opening ' + title + '...');
+let filters = {};
+if (filterType === 'status' && filterValue !== 'All') filters.status = filterValue;
+if (filterType === 'category') filters.category = filterValue;
+if (filterType === 'gp') filters.gramPanchayat = filterValue;
+const res = await callGAS('getAllComplaints', { filters: filters });
+const modal = document.getElementById('dashboardExplorerModal');
+const container = document.getElementById('explorerComplaintsContainer');
+document.getElementById('explorerModalTitle').innerHTML = `<i class="fa-solid fa-folder-open"></i> ${title} (${res.data ? res.data.length : 0})`;
+if (!res.success || !res.data || res.data.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No complaints found for this selection.</p></div>`; }
+else {
+let html = '';
+res.data.forEach(c => {
+const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
+});
+container.innerHTML = html;
+}
+modal.style.display = 'flex';
+hideLoader();
+}
+function closeDashboardExplorer() { document.getElementById('dashboardExplorerModal').style.display = 'none'; }
 
 function openCameraModal() {
 const modal = document.getElementById('cameraModal'); modal.style.display = 'flex';
@@ -484,7 +547,7 @@ function removeAttachment(idx) { appState.selectedFiles.splice(idx, 1); renderAt
 async function handleComplaintSubmit(e) {
 e.preventDefault();
 if (appState.selectedFiles.length === 0) {
-showToast('️ Site Photo is mandatory! Please capture or upload a photo.');
+showToast('⚠️ Site Photo is mandatory! Please capture or upload a photo.');
 const evidenceBox = document.querySelector('.evidence-box');
 evidenceBox.style.borderColor = 'var(--danger)'; evidenceBox.style.background = '#FEF2F2';
 setTimeout(() => { evidenceBox.style.borderColor = ''; evidenceBox.style.background = ''; }, 3000);
@@ -574,9 +637,20 @@ document.getElementById('loggedUserRole').innerText = user.role;
 document.getElementById('loggedUserDept').innerText = user.department || 'All Departments';
 document.getElementById('auth-status-btn').innerHTML = `<i class="fa-solid fa-user"></i> <span>${user.name}</span>`;
 document.getElementById('pTabBtnOfficers').style.display = (user.role === 'Admin') ? 'inline-block' : 'none';
+
+// Admin হলে Dashboard Stats দেখাও
+if (user.role === 'Admin') {
+document.getElementById('adminDashboardStats').style.display = 'block';
+loadDashboardStats();
+} else {
+document.getElementById('adminDashboardStats').style.display = 'none';
+}
+
 document.getElementById('portalLoggedOut').style.display = 'none';
 document.getElementById('portalLoggedIn').style.display = 'block';
-switchTab('portal'); refreshOfficerComplaints(); loadOfficersListForAssign();
+switchTab('portal');
+refreshOfficerComplaints();
+loadOfficersListForAssign();
 }
 function checkSavedSession() {
 const saved = sessionStorage.getItem('gzl_user');
@@ -585,6 +659,7 @@ if (saved) { try { setLoggedInUser(JSON.parse(saved)); } catch (e) { sessionStor
 function handleLogout() {
 appState.currentUser = null; sessionStorage.removeItem('gzl_user');
 document.getElementById('auth-status-btn').innerHTML = `<i class="fa-solid fa-user-shield"></i> <span>Officer Login</span>`;
+document.getElementById('adminDashboardStats').style.display = 'none';
 document.getElementById('portalLoggedOut').style.display = 'block';
 document.getElementById('portalLoggedIn').style.display = 'none';
 switchTab('new'); showToast('Logged out successfully.');

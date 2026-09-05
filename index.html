@@ -9,7 +9,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #E65100; --primary-light: #FF9800; --primary-subtle: #FFF3E0; --primary-dark: #BF360C; --secondary: #1E293B; --accent: #2563EB; --bg-main: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0; --text-primary: #0F172A; --text-secondary: #475569; --text-muted: #94A3B8; --success: #10B981; --warning: #F59E0B; --danger: #EF4444; --radius: 12px; --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04); }
+    :root {
+      --primary: #E65100; --primary-light: #FF9800; --primary-subtle: #FFF3E0; --primary-dark: #BF360C;
+      --secondary: #1E293B; --accent: #2563EB; --bg-main: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+      --text-primary: #0F172A; --text-secondary: #475569; --text-muted: #94A3B8;
+      --success: #10B981; --warning: #F59E0B; --danger: #EF4444;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg-main); color: var(--text-primary); line-height: 1.5; padding-bottom: 85px; min-height: 100vh; }
     .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #ffffff; padding: 12px 20px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
@@ -261,12 +269,20 @@
   <div id="loadingOverlay" class="loading-overlay" style="display: none;"><div class="spinner-box"><div class="app-spinner"></div><p id="loadingMessage">Loading...</p></div></div>
 
   <script>
+    // ⚠️ আপনার দেওয়া Web App URL
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyTqmsdQDuGiCKXNflp44FflSM95Q5plBJAT5dqyGC_nCjUbBCJQ29dnaD44HVDwc0QZA/exec";
+
     let appState = { currentTab: 'new', portalSubTab: 'complaints', selectedFiles: [], mediaStream: null, currentUser: null, cachedComplaints: [], cachedOfficers: [], categories: {}, gpList: [], departments: [], mouzas: [] };
 
+    // ✅ Fetch API Wrapper for GitHub Pages
     async function callGAS(action, payload = {}, showLoaderFlag = true) {
       if (showLoaderFlag) showLoader('Processing...');
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzVaQ6YZUA3KaArcSLbc8bflD0e3pwdm-Og2fNhgu6Ym2BIiYRvBaEjp8DVPQyEY3CZKg/exec", { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: action, ...payload }) });
+        const response = await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: action, ...payload })
+        });
         const result = await response.json();
         if (showLoaderFlag) hideLoader();
         return result;
@@ -284,10 +300,13 @@
       showLoader('Initializing Gazole Portal...');
       const gpRes = await callGAS('getGPList', {}, false);
       if (gpRes.success) { appState.gpList = gpRes.data; populateGPSelects(gpRes.data); }
+      
       const catRes = await callGAS('getCategories', {}, false);
       if (catRes.success) { appState.categories = catRes.data; populateCategorySelects(catRes.data); }
+      
       const deptRes = await callGAS('getDepartments', {}, false);
       if (deptRes.success) { appState.departments = deptRes.data; populateDepartmentSelects(deptRes.data); }
+      
       hideLoader();
       loadDashboardStats();
       fetchAllComplaintsToCache();
@@ -319,7 +338,7 @@
       });
     }
 
-    function handleGPChange() {
+    async function handleGPChange() {
       const gp = document.getElementById('gramPanchayat').value;
       const villageSelect = document.getElementById('village');
       const mouzaSelect = document.getElementById('mouza');
@@ -329,17 +348,20 @@
       document.getElementById('jlNo').value = '';
       customVillageGroup.style.display = 'none';
       if (!gp) return;
-      google.script.run.withSuccessHandler(function(res) {
-        villageSelect.innerHTML = '<option value="">Select Village...</option><option value="Other">Other (Not in list)</option>';
-        if (res.success && res.data) res.data.forEach(v => villageSelect.add(new Option(v, v)));
-      }).getVillagesByGP(gp);
-      google.script.run.withSuccessHandler(function(res) {
-        mouzaSelect.innerHTML = '<option value="">Select Mouza...</option>';
-        if (res.success && res.data) {
-          appState.mouzas = res.data;
-          res.data.forEach(m => mouzaSelect.add(new Option(m.name + (m.jlNo ? ' (JL:' + m.jlNo + ')' : ''), m.name)));
-        }
-      }).getMouzasByGP(gp);
+      
+      const [villageRes, mouzaRes] = await Promise.all([
+        callGAS('getVillagesByGP', { gpName: gp }, false),
+        callGAS('getMouzasByGP', { gpName: gp }, false)
+      ]);
+      
+      villageSelect.innerHTML = '<option value="">Select Village...</option><option value="Other">Other (Not in list)</option>';
+      if (villageRes.success && villageRes.data) villageRes.data.forEach(v => villageSelect.add(new Option(v, v)));
+      
+      mouzaSelect.innerHTML = '<option value="">Select Mouza...</option>';
+      if (mouzaRes.success && mouzaRes.data) {
+        appState.mouzas = mouzaRes.data;
+        mouzaRes.data.forEach(m => mouzaSelect.add(new Option(m.name + (m.jlNo ? ' (JL:' + m.jlNo + ')' : ''), m.name)));
+      }
     }
     function handleVillageChange() {
       const village = document.getElementById('village').value;
@@ -386,63 +408,59 @@
       if (subTab === 'officers') loadOfficersTable();
     }
 
-    function handleTrackSearch(e) {
+    async function handleTrackSearch(e) {
       if (e && e.preventDefault) e.preventDefault();
       const query = document.getElementById('trackInput').value.trim();
       if (!query) { showToast('Please enter a search keyword.'); return; }
       showLoader('Searching grievance records...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        const container = document.getElementById('trackResultContainer');
-        if (!res.success || !res.data || res.data.length === 0) {
-          container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-exclamation" style="color:var(--warning);"></i><p>${res.message || 'No matching grievances found.'}</p></div>`;
-          return;
-        }
-        let html = `<p style="margin-bottom:12px; font-weight:700; color:var(--text-secondary);">Found ${res.data.length} Grievance Record(s):</p>`;
-        res.data.forEach(c => {
-          const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
-          html += `<div class="complaint-result-card"><div class="result-header"><div><h3 style="color:var(--primary); font-weight:800;">${c.ComplaintID}</h3><small style="color:var(--text-secondary);">${c.Date} at ${c.Time}</small></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><div style="margin-bottom:12px;"><p><strong>Complainant:</strong> ${c.FullName} (${c.Relation || 'S/O'} ${c.GuardianName || 'N/A'})</p><p><strong>Mobile Number:</strong> ${c.Mobile}</p><p><strong>Location:</strong> Vill. ${c.Village}, GP: ${c.GramPanchayat}</p>${c.Mouza ? `<p><strong>Mouza:</strong> ${c.Mouza} (JL: ${c.JLNo || 'N/A'})</p>` : ''}<p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="margin-top:6px; background:var(--bg-main); padding:8px 12px; border-radius:6px;"><strong>Issue:</strong> ${c.Description}</p></div><div class="timeline-step"><strong>Current Status: ${c.Status}</strong>${c.AssignedDepartment ? `<p style="font-size:13px; color:var(--primary); font-weight:600;">Tagged Dept: ${c.AssignedDepartment}</p>` : ''}${c.AssignedOfficer ? `<p style="font-size:13px; color:var(--secondary); font-weight:600;">Assigned Officer: ${c.AssignedOfficer}</p>` : ''}<p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${c.ActionTaken ? 'Action Taken: ' + c.ActionTaken : 'Pending administrative action.'}</p>${c.Remarks ? `<p style="font-size:12px; color:var(--text-muted);">Remarks: ${c.Remarks}</p>` : ''}</div>${c.EvidenceURLs ? `<div style="margin-top:12px;"><a href="${c.EvidenceURLs.split(',')[0]}" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-image"></i> View Site Photo / Document</a></div>` : ''}</div>`;
-        });
-        container.innerHTML = html;
-      }).withFailureHandler(function(err) { hideLoader(); showToast('Tracking error: ' + err.message); }).trackComplaint(query);
+      const res = await callGAS('trackComplaint', { query: query });
+      const container = document.getElementById('trackResultContainer');
+      if (!res.success || !res.data || res.data.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-circle-exclamation" style="color:var(--warning);"></i><p>${res.message || 'No matching grievances found.'}</p></div>`;
+        return;
+      }
+      let html = `<p style="margin-bottom:12px; font-weight:700; color:var(--text-secondary);">Found ${res.data.length} Grievance Record(s):</p>`;
+      res.data.forEach(c => {
+        const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+        html += `<div class="complaint-result-card"><div class="result-header"><div><h3 style="color:var(--primary); font-weight:800;">${c.ComplaintID}</h3><small style="color:var(--text-secondary);">${c.Date} at ${c.Time}</small></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><div style="margin-bottom:12px;"><p><strong>Complainant:</strong> ${c.FullName} (${c.Relation || 'S/O'} ${c.GuardianName || 'N/A'})</p><p><strong>Mobile Number:</strong> ${c.Mobile}</p><p><strong>Location:</strong> Vill. ${c.Village}, GP: ${c.GramPanchayat}</p>${c.Mouza ? `<p><strong>Mouza:</strong> ${c.Mouza} (JL: ${c.JLNo || 'N/A'})</p>` : ''}<p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="margin-top:6px; background:var(--bg-main); padding:8px 12px; border-radius:6px;"><strong>Issue:</strong> ${c.Description}</p></div><div class="timeline-step"><strong>Current Status: ${c.Status}</strong>${c.AssignedDepartment ? `<p style="font-size:13px; color:var(--primary); font-weight:600;">Tagged Dept: ${c.AssignedDepartment}</p>` : ''}${c.AssignedOfficer ? `<p style="font-size:13px; color:var(--secondary); font-weight:600;">Assigned Officer: ${c.AssignedOfficer}</p>` : ''}<p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">${c.ActionTaken ? 'Action Taken: ' + c.ActionTaken : 'Pending administrative action.'}</p>${c.Remarks ? `<p style="font-size:12px; color:var(--text-muted);">Remarks: ${c.Remarks}</p>` : ''}</div>${c.EvidenceURLs ? `<div style="margin-top:12px;"><a href="${c.EvidenceURLs.split(',')[0]}" target="_blank" class="btn btn-outline btn-sm"><i class="fa-solid fa-image"></i> View Site Photo / Document</a></div>` : ''}</div>`;
+      });
+      container.innerHTML = html;
     }
 
-    function loadDashboardStats() {
-      google.script.run.withSuccessHandler(function(res) {
-        if (!res.success) return;
-        const d = res.data;
-        document.getElementById('statTotal').innerText = d.total || 0;
-        document.getElementById('statResolved').innerText = d.resolved || 0;
-        document.getElementById('statPending').innerText = d.pending || 0;
-        document.getElementById('statInProgress').innerText = d.inProgress || 0;
-        const catList = document.getElementById('categoryStatsList'); catList.innerHTML = '';
-        Object.keys(d.byCategory || {}).forEach(k => { catList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('category', '${k}', '${k} Grievances')"><span><i class="fa-solid fa-folder-open" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byCategory[k]}</strong></div>`; });
-        const gpList = document.getElementById('gpStatsList'); gpList.innerHTML = '';
-        Object.keys(d.byGP || {}).forEach(k => { gpList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('gp', '${k}', '${k} GP Grievances')"><span><i class="fa-solid fa-location-dot" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byGP[k]}</strong></div>`; });
-      }).getDashboardStats();
+    async function loadDashboardStats() {
+      const res = await callGAS('getDashboardStats', {}, false);
+      if (!res.success) return;
+      const d = res.data;
+      document.getElementById('statTotal').innerText = d.total || 0;
+      document.getElementById('statResolved').innerText = d.resolved || 0;
+      document.getElementById('statPending').innerText = d.pending || 0;
+      document.getElementById('statInProgress').innerText = d.inProgress || 0;
+      const catList = document.getElementById('categoryStatsList'); catList.innerHTML = '';
+      Object.keys(d.byCategory || {}).forEach(k => { catList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('category', '${k}', '${k} Grievances')"><span><i class="fa-solid fa-folder-open" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byCategory[k]}</strong></div>`; });
+      const gpList = document.getElementById('gpStatsList'); gpList.innerHTML = '';
+      Object.keys(d.byGP || {}).forEach(k => { gpList.innerHTML += `<div class="breakdown-item" onclick="handleDashboardCardClick('gp', '${k}', '${k} GP Grievances')"><span><i class="fa-solid fa-location-dot" style="color:var(--primary);margin-right:6px;"></i> ${k}</span><strong>${d.byGP[k]}</strong></div>`; });
     }
-    function handleDashboardCardClick(filterType, filterValue, title) {
+    async function handleDashboardCardClick(filterType, filterValue, title) {
       showLoader('Opening ' + title + '...');
       let filters = {};
       if (filterType === 'status' && filterValue !== 'All') filters.status = filterValue;
       if (filterType === 'category') filters.category = filterValue;
       if (filterType === 'gp') filters.gramPanchayat = filterValue;
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        const modal = document.getElementById('dashboardExplorerModal');
-        const container = document.getElementById('explorerComplaintsContainer');
-        document.getElementById('explorerModalTitle').innerHTML = `<i class="fa-solid fa-folder-open"></i> ${title} (${res.data ? res.data.length : 0})`;
-        if (!res.success || !res.data || res.data.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No complaints found for this selection.</p></div>`; }
-        else {
-          let html = '';
-          res.data.forEach(c => {
-            const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
-            html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
-          });
-          container.innerHTML = html;
-        }
-        modal.style.display = 'flex';
-      }).withFailureHandler(function(err) { hideLoader(); showToast('Error loading list: ' + err.message); }).getAllComplaints(filters);
+      const res = await callGAS('getAllComplaints', { filters: filters });
+      const modal = document.getElementById('dashboardExplorerModal');
+      const container = document.getElementById('explorerComplaintsContainer');
+      document.getElementById('explorerModalTitle').innerHTML = `<i class="fa-solid fa-folder-open"></i> ${title} (${res.data ? res.data.length : 0})`;
+      if (!res.success || !res.data || res.data.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No complaints found for this selection.</p></div>`; }
+      else {
+        let html = '';
+        res.data.forEach(c => {
+          const statusClass = 'badge-' + (c.Status || 'pending').toLowerCase().replace(/\s+/g, '');
+          html += `<div class="complaint-result-card" style="margin-top:0;"><div class="result-header"><div><strong style="color:var(--primary); font-size:15px;">${c.ComplaintID}</strong><span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${c.Date}</span></div><span class="complaint-badge ${statusClass}">${c.Status}</span></div><p><strong>Complainant:</strong> ${c.FullName} (${c.Mobile})</p><p><strong>GP & Village:</strong> ${c.GramPanchayat} - ${c.Village}</p><p><strong>Category:</strong> ${c.Category}${c.SubCategory ? ' → ' + c.SubCategory : ''}</p><p style="background:var(--bg-main); padding:8px; border-radius:6px; font-size:13px; margin:6px 0;"><strong>Issue:</strong> ${c.Description}</p>${c.ActionTaken ? `<p style="font-size:12px; color:var(--success);"><strong>Action:</strong> ${c.ActionTaken}</p>` : ''}</div>`;
+        });
+        container.innerHTML = html;
+      }
+      modal.style.display = 'flex';
+      hideLoader();
     }
     function closeDashboardExplorer() { document.getElementById('dashboardExplorerModal').style.display = 'none'; }
 
@@ -495,7 +513,7 @@
     }
     function removeAttachment(idx) { appState.selectedFiles.splice(idx, 1); renderAttachments(); }
 
-    function handleComplaintSubmit(e) {
+    async function handleComplaintSubmit(e) {
       e.preventDefault();
       if (appState.selectedFiles.length === 0) {
         showToast('⚠️ Site Photo is mandatory! Please capture or upload a photo.');
@@ -516,14 +534,12 @@
       };
       if (formData.mobile.length !== 10) { showToast('Please enter a valid 10-digit mobile number.'); return; }
       showLoader('Registering grievance & saving documents...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (res.success) {
-          document.getElementById('complaintForm').reset(); appState.selectedFiles = []; renderAttachments();
-          document.getElementById('customVillageGroup').style.display = 'none'; document.getElementById('jlNo').value = '';
-          showSuccessPage(res.complaintId);
-        } else { alert('Error: ' + res.error); }
-      }).withFailureHandler(function(err) { hideLoader(); alert('Server Error: ' + err.message); }).submitComplaint(formData);
+      const res = await callGAS('submitComplaint', { formData: formData });
+      if (res.success) {
+        document.getElementById('complaintForm').reset(); appState.selectedFiles = []; renderAttachments();
+        document.getElementById('customVillageGroup').style.display = 'none'; document.getElementById('jlNo').value = '';
+        showSuccessPage(res.complaintId);
+      } else { alert('Error: ' + res.error); }
     }
 
     function showSuccessPage(complaintId) {
@@ -546,21 +562,20 @@
     }
     function submitAnotherComplaint() { document.getElementById('complaintForm').reset(); appState.selectedFiles = []; renderAttachments(); hideSuccessPage(); }
     function returnToHome() { hideSuccessPage(); }
-    function downloadAcknowledgement() {
+    async function downloadAcknowledgement() {
       const complaintId = sessionStorage.getItem('currentComplaintId');
       if (!complaintId) { showToast('Complaint ID not found'); return; }
       showLoader('Generating acknowledgement...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (!res.success || !res.data || res.data.length === 0) { showToast('Could not fetch complaint details'); return; }
-        const c = res.data[0];
-        const content = `GAZOLE JAN SHUNANI - GRIEVANCE ACKNOWLEDGEMENT\n===============================================\n\nComplaint ID: ${c.ComplaintID}\nDate: ${c.Date} ${c.Time}\n\nCOMPLAINANT DETAILS:\nName: ${c.FullName}\nMobile: ${c.Mobile}\nGuardian: ${c.GuardianName} (${c.Relation})\n\nLOCATION:\nGram Panchayat: ${c.GramPanchayat}\nVillage: ${c.Village}\nMouza: ${c.Mouza || 'N/A'}\nJ.L. No.: ${c.JLNo || 'N/A'}\n\nGRIEVANCE DETAILS:\nCategory: ${c.Category}\nSub-Category: ${c.SubCategory || 'N/A'}\nDescription: ${c.Description}\n\nSTATUS: ${c.Status}\n\nThis is a computer-generated acknowledgement.\nFor queries, contact: BDO Office, Gazole Block\n===============================================`;
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `Acknowledgement_${complaintId}.txt`; a.click();
-        window.URL.revokeObjectURL(url);
-        showToast('Acknowledgement downloaded!');
-      }).trackComplaint(complaintId);
+      const res = await callGAS('trackComplaint', { query: complaintId }, false);
+      hideLoader();
+      if (!res.success || !res.data || res.data.length === 0) { showToast('Could not fetch complaint details'); return; }
+      const c = res.data[0];
+      const content = `GAZOLE JAN SHUNANI - GRIEVANCE ACKNOWLEDGEMENT\n===============================================\n\nComplaint ID: ${c.ComplaintID}\nDate: ${c.Date} ${c.Time}\n\nCOMPLAINANT DETAILS:\nName: ${c.FullName}\nMobile: ${c.Mobile}\nGuardian: ${c.GuardianName} (${c.Relation})\n\nLOCATION:\nGram Panchayat: ${c.GramPanchayat}\nVillage: ${c.Village}\nMouza: ${c.Mouza || 'N/A'}\nJ.L. No.: ${c.JLNo || 'N/A'}\n\nGRIEVANCE DETAILS:\nCategory: ${c.Category}\nSub-Category: ${c.SubCategory || 'N/A'}\nDescription: ${c.Description}\n\nSTATUS: ${c.Status}\n\nThis is a computer-generated acknowledgement.\nFor queries, contact: BDO Office, Gazole Block\n===============================================`;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `Acknowledgement_${complaintId}.txt`; a.click();
+      window.URL.revokeObjectURL(url);
+      showToast('Acknowledgement downloaded!');
     }
 
     function openLoginModal() { if (appState.currentUser) { switchTab('portal'); return; } document.getElementById('loginModal').style.display = 'flex'; }
@@ -572,21 +587,17 @@
       document.getElementById('officerLoginForm').style.display = isOfficer ? 'block' : 'none';
       document.getElementById('adminLoginForm').style.display = isOfficer ? 'none' : 'block';
     }
-    function handleOfficerLogin(e) {
+    async function handleOfficerLogin(e) {
       e.preventDefault();
       showLoader('Authenticating officer...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (res.success) { setLoggedInUser(res.user); closeLoginModal(); } else { alert(res.message); }
-      }).withFailureHandler(function(err) { hideLoader(); alert('Login failed: ' + err.message); }).officerLogin(document.getElementById('loginMobile').value.trim(), document.getElementById('loginPin').value.trim());
+      const res = await callGAS('officerLogin', { mobile: document.getElementById('loginMobile').value.trim(), pin: document.getElementById('loginPin').value.trim() });
+      if (res.success) { setLoggedInUser(res.user); closeLoginModal(); } else { alert(res.message); }
     }
-    function handleAdminLogin(e) {
+    async function handleAdminLogin(e) {
       e.preventDefault();
       showLoader('Authenticating Admin...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (res.success) { setLoggedInUser(res.user); closeLoginModal(); } else { alert(res.message); }
-      }).withFailureHandler(function(err) { hideLoader(); alert('Admin login failed: ' + err.message); }).adminLogin(document.getElementById('adminPassword').value);
+      const res = await callGAS('adminLogin', { password: document.getElementById('adminPassword').value });
+      if (res.success) { setLoggedInUser(res.user); closeLoginModal(); } else { alert(res.message); }
     }
     function setLoggedInUser(user) {
       appState.currentUser = user; sessionStorage.setItem('gzl_user', JSON.stringify(user));
@@ -610,12 +621,11 @@
       document.getElementById('portalLoggedIn').style.display = 'none';
       switchTab('new'); showToast('Logged out successfully.');
     }
-    function refreshOfficerComplaints() {
+    async function refreshOfficerComplaints() {
       showLoader('Fetching grievances...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (res.success) { appState.cachedComplaints = res.data; applyPortalFilters(); }
-      }).getAllComplaints({ officerUser: appState.currentUser });
+      const res = await callGAS('getAllComplaints', { officerUser: appState.currentUser }, false);
+      hideLoader();
+      if (res.success) { appState.cachedComplaints = res.data; applyPortalFilters(); }
     }
     function applyPortalFilters() {
       const status = document.getElementById('filterStatus').value;
@@ -646,15 +656,14 @@
       tbody.innerHTML = html;
     }
 
-    function loadOfficersListForAssign() {
-      google.script.run.withSuccessHandler(function(res) {
-        if (res.success) {
-          appState.cachedOfficers = res.data;
-          const officerSelect = document.getElementById('assignOfficerSelect');
-          officerSelect.innerHTML = '<option value="">Select Officer...</option>';
-          res.data.forEach(o => { if (String(o.Status).toLowerCase() === 'active') officerSelect.add(new Option(`${o.Name} (${o.Role} - ${o.Department})`, o.Name)); });
-        }
-      }).getAllOfficers();
+    async function loadOfficersListForAssign() {
+      const res = await callGAS('getAllOfficers', {}, false);
+      if (res.success) {
+        appState.cachedOfficers = res.data;
+        const officerSelect = document.getElementById('assignOfficerSelect');
+        officerSelect.innerHTML = '<option value="">Select Officer...</option>';
+        res.data.forEach(o => { if (String(o.Status).toLowerCase() === 'active') officerSelect.add(new Option(`${o.Name} (${o.Role} - ${o.Department})`, o.Name)); });
+      }
     }
     function openActionModal(id, currentStatus, currentDept, currentOfficer) {
       document.getElementById('actionComplaintId').value = id;
@@ -667,7 +676,7 @@
       document.getElementById('actionModal').style.display = 'flex';
     }
     function closeActionModal() { document.getElementById('actionModal').style.display = 'none'; }
-    function handleActionUpdateSubmit(e) {
+    async function handleActionUpdateSubmit(e) {
       e.preventDefault();
       const id = document.getElementById('actionComplaintId').value;
       const status = document.getElementById('updateStatusSelect').value;
@@ -677,31 +686,27 @@
       const remarks = document.getElementById('updateRemarks').value.trim();
       const updater = appState.currentUser ? appState.currentUser.name : 'Officer';
       showLoader('Updating complaint action and officer tag...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (res.success) { closeActionModal(); showToast(res.message); refreshOfficerComplaints(); } else { alert(res.message || res.error); }
-      }).updateComplaintStatus(id, status, action, remarks, updater, officer, dept);
+      const res = await callGAS('updateComplaintStatus', { id, status, action, remarks, updater, officer, dept });
+      if (res.success) { closeActionModal(); showToast(res.message); refreshOfficerComplaints(); } else { alert(res.message || res.error); }
     }
 
-    function loadOfficersTable() {
+    async function loadOfficersTable() {
       showLoader('Loading officers list...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (!res.success) return;
-        appState.cachedOfficers = res.data;
-        const tbody = document.getElementById('officersTableBody');
-        if (res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center">No officers registered.</td></tr>'; return; }
-        let html = '';
-        res.data.forEach(o => {
-          const isActive = (String(o.Status).toLowerCase() === 'active');
-          html += `<tr><td><strong>${o.UserID}</strong></td><td>${o.Name}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${o.Department}</span></td><td>${o.Category || 'All'}</td><td>${o.SubCategory || 'All'}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
-        });
-        tbody.innerHTML = html;
-      }).getAllOfficers();
+      const res = await callGAS('getAllOfficers', {});
+      if (!res.success) return;
+      appState.cachedOfficers = res.data;
+      const tbody = document.getElementById('officersTableBody');
+      if (res.data.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="text-center">No officers registered.</td></tr>'; return; }
+      let html = '';
+      res.data.forEach(o => {
+        const isActive = (String(o.Status).toLowerCase() === 'active');
+        html += `<tr><td><strong>${o.UserID}</strong></td><td>${o.Name}</td><td>${o.Mobile}</td><td><span class="complaint-badge badge-assigned">${o.Role}</span></td><td><span class="badge-dept">${o.Department}</span></td><td>${o.Category || 'All'}</td><td>${o.SubCategory || 'All'}</td><td><span class="complaint-badge ${isActive ? 'badge-resolved' : 'badge-closed'}">${o.Status}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleOfficerStatus('${o.UserID}', '${isActive ? 'Inactive' : 'Active'}')">${isActive ? '<i class="fa-solid fa-ban" style="color:red;"></i> Deactivate' : '<i class="fa-solid fa-check" style="color:green;"></i> Activate'}</button></td></tr>`;
+      });
+      tbody.innerHTML = html;
     }
     function openCreateOfficerModal() { document.getElementById('createOfficerModal').style.display = 'flex'; }
     function closeCreateOfficerModal() { document.getElementById('createOfficerModal').style.display = 'none'; }
-    function handleCreateOfficerSubmit(e) {
+    async function handleCreateOfficerSubmit(e) {
       e.preventDefault();
       const officerData = {
         name: document.getElementById('newOfficerName').value.trim(), mobile: document.getElementById('newOfficerMobile').value.trim(),
@@ -710,16 +715,13 @@
         category: document.getElementById('newOfficerCategory').value, subCategory: document.getElementById('newOfficerSubCategory').value
       };
       showLoader('Registering new officer account...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        if (res.success) { document.getElementById('createOfficerForm').reset(); closeCreateOfficerModal(); alert(res.message); loadOfficersTable(); loadOfficersListForAssign(); } else { alert('Error: ' + res.error); }
-      }).createOfficer(officerData, appState.currentUser ? appState.currentUser.name : 'Admin');
+      const res = await callGAS('createOfficer', { officerData: officerData, createdBy: appState.currentUser ? appState.currentUser.name : 'Admin' });
+      if (res.success) { document.getElementById('createOfficerForm').reset(); closeCreateOfficerModal(); alert(res.message); loadOfficersTable(); loadOfficersListForAssign(); } else { alert('Error: ' + res.error); }
     }
-    function toggleOfficerStatus(userId, newStatus) {
+    async function toggleOfficerStatus(userId, newStatus) {
       showLoader('Updating officer status...');
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader(); showToast(res.message); loadOfficersTable(); loadOfficersListForAssign();
-      }).toggleOfficerStatus(userId, newStatus);
+      const res = await callGAS('toggleOfficerStatus', { userId: userId, newStatus: newStatus });
+      showToast(res.message); loadOfficersTable(); loadOfficersListForAssign();
     }
 
     function showLoader(msg) { document.getElementById('loadingMessage').innerText = msg || 'Loading...'; document.getElementById('loadingOverlay').style.display = 'flex'; }
